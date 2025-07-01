@@ -60,3 +60,8 @@ class LanguageForm(forms.ModelForm):
     class Meta:
         model = Language
         fields = ['name', 'proficiency', 'certification', 'is_visible']
+
+class ResumeTemplateSelectionForm(forms.ModelForm):
+    class Meta:
+        model = Resume
+        fields = ['template']

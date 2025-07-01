@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Language Detail</h2>
+    <table class="table table-bordered">
+        <tr><th>Name</th><td>{{ language.name }}</td></tr>
+        <tr><th>Proficiency</th><td>{{ language.get_proficiency_display }}</td></tr>
+        <tr><th>Certification</th><td>{{ language.certification }}</td></tr>
+    </table>
+    <a href="{% url 'language_update' language.pk %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'language_delete' language.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'language_list' %}" class="btn btn-secondary">Back to List</a>
+</div>
+{% endblock %} 

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Technical Skill Detail</h2>
+    <table class="table table-bordered">
+        <tr><th>Technology</th><td>{{ technicalskill.technology }}</td></tr>
+        <tr><th>Proficiency</th><td>{{ technicalskill.get_proficiency_display }}</td></tr>
+        <tr><th>Years Experience</th><td>{{ technicalskill.years_experience }}</td></tr>
+        <tr><th>Last Used</th><td>{{ technicalskill.last_used }}</td></tr>
+        <tr><th>Project Count</th><td>{{ technicalskill.project_count }}</td></tr>
+    </table>
+    <a href="{% url 'technicalskill_update' technicalskill.pk %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'technicalskill_delete' technicalskill.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'technicalskill_list' %}" class="btn btn-secondary">Back to List</a>
+</div>
+{% endblock %} 
+ 

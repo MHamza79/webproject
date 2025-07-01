@@ -1,0 +1,149 @@
+{% extends 'resume_base.html' %}
+
+{% block title %}
+{{ job.title }} at {{ job.company }} - DiamondTalent
+{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{ job.title }}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'jobs:job_list' %}">Jobs</a></li>
+      <li class="breadcrumb-item active">{{ job.title }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <!-- Job Details -->
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <!-- Job Header -->
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+              <h4 class="card-title mb-1">{{ job.title }}</h4>
+              <h6 class="text-muted mb-2">{{ job.company }}</h6>
+              <p class="text-muted mb-0">
+                <i class="bi bi-geo-alt"></i> {{ job.location }}
+              </p>
+            </div>
+            <div class="text-end">
+              <div class="d-flex gap-2 mb-2">
+                <span class="badge bg-primary">{{ job.get_job_type_display }}</span>
+                <span class="badge bg-info">{{ job.get_experience_level_display }}</span>
+              </div>
+              {% if job.salary_min or job.salary_max %}
+                <div class="text-success fw-bold">{{ job.get_salary_display }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- Job Description -->
+          <div class="mb-4">
+            <h5>Job Description</h5>
+            <div class="border-start border-primary ps-3">
+              {{ job.description|linebreaks }}
+            </div>
+          </div>
+          
+          <!-- Requirements -->
+          <div class="mb-4">
+            <h5>Requirements</h5>
+            <div class="border-start border-warning ps-3">
+              {{ job.requirements|linebreaks }}
+            </div>
+          </div>
+          
+          <!-- Benefits -->
+          {% if job.benefits %}
+            <div class="mb-4">
+              <h5>Benefits</h5>
+              <div class="border-start border-success ps-3">
+                {{ job.benefits|linebreaks }}
+              </div>
+            </div>
+          {% endif %}
+          
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary">
+              <i class="bi bi-paperclip"></i> Apply Now
+            </button>
+            <button class="btn btn-outline-primary">
+              <i class="bi bi-heart"></i> Save Job
+            </button>
+            <button class="btn btn-outline-secondary">
+              <i class="bi bi-share"></i> Share
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Job Info Sidebar -->
+    <div class="col-lg-4">
+      <!-- Job Summary -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Job Summary</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-building text-muted me-2"></i>
+              <strong>Company:</strong> {{ job.company }}
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-geo-alt text-muted me-2"></i>
+              <strong>Location:</strong> {{ job.location }}
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-briefcase text-muted me-2"></i>
+              <strong>Job Type:</strong> {{ job.get_job_type_display }}
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-person-badge text-muted me-2"></i>
+              <strong>Experience:</strong> {{ job.get_experience_level_display }}
+            </li>
+            {% if job.salary_min or job.salary_max %}
+              <li class="mb-2">
+                <i class="bi bi-cash text-muted me-2"></i>
+                <strong>Salary:</strong> {{ job.get_salary_display }}
+              </li>
+            {% endif %}
+            <li class="mb-2">
+              <i class="bi bi-calendar text-muted me-2"></i>
+              <strong>Posted:</strong> {{ job.posted_date|date:"M d, Y" }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Related Jobs -->
+      {% if related_jobs %}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Related Jobs</h5>
+            {% for related_job in related_jobs %}
+              <div class="border-bottom pb-2 mb-2">
+                <h6 class="mb-1">
+                  <a href="{% url 'jobs:job_detail' related_job.id %}" class="text-decoration-none">
+                    {{ related_job.title }}
+                  </a>
+                </h6>
+                <p class="text-muted small mb-1">{{ related_job.company }}</p>
+                <div class="d-flex gap-1">
+                  <span class="badge bg-primary small">{{ related_job.get_job_type_display }}</span>
+                  <span class="badge bg-info small">{{ related_job.get_experience_level_display }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %} 

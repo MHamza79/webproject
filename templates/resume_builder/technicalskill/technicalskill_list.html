@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Technical Skills</h2>
+    <a href="{% url 'technicalskill_create' %}" class="btn btn-primary mb-3">Add Technical Skill</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Technology</th>
+                <th>Proficiency</th>
+                <th>Years Experience</th>
+                <th>Last Used</th>
+                <th>Project Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for technicalskill in technicalskills %}
+            <tr>
+                <td>{{ technicalskill.technology }}</td>
+                <td>{{ technicalskill.get_proficiency_display }}</td>
+                <td>{{ technicalskill.years_experience }}</td>
+                <td>{{ technicalskill.last_used }}</td>
+                <td>{{ technicalskill.project_count }}</td>
+                <td>
+                    <a href="{% url 'technicalskill_detail' technicalskill.pk %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'technicalskill_update' technicalskill.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'technicalskill_delete' technicalskill.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">No technical skills found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

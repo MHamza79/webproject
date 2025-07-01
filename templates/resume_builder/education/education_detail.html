@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Education Detail</h2>
+    <table class="table table-bordered">
+        <tr><th>Degree</th><td>{{ education.degree }}</td></tr>
+        <tr><th>Institution</th><td>{{ education.institution }}</td></tr>
+        <tr><th>Location</th><td>{{ education.location }}</td></tr>
+        <tr><th>Start Date</th><td>{{ education.start_date }}</td></tr>
+        <tr><th>End Date</th><td>{{ education.end_date }}</td></tr>
+        <tr><th>GPA</th><td>{{ education.gpa }}</td></tr>
+        <tr><th>Description</th><td>{{ education.description }}</td></tr>
+    </table>
+    <a href="{% url 'education_update' education.pk %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'education_delete' education.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'education_list' %}" class="btn btn-secondary">Back to List</a>
+</div>
+{% endblock %} 

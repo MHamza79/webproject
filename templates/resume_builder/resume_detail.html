@@ -1,0 +1,322 @@
+{% extends 'resume_base.html' %}
+{% load static %}
+
+{% block title %}
+{{ resume.title }} - DiamondTalent
+{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{{ resume.title }}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'resume_list' %}">Resumes</a></li>
+      <li class="breadcrumb-item active">{{ resume.title }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Resume Content -->
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title">Resume Preview</h5>
+            <div class="btn-group" role="group">
+              <a href="{% url 'resume_download' resume.pk %}" class="btn btn-success">
+                <i class="bi bi-download me-2"></i>Download PDF
+              </a>
+              <a href="{% url 'resume_update' resume.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil me-2"></i>Edit
+              </a>
+              <a href="{% url 'resume_delete' resume.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash me-2"></i>Delete
+              </a>
+            </div>
+          </div>
+          
+          <!-- Resume Header -->
+          <div class="resume-header mb-4">
+            <h2>{{ resume.title }}</h2>
+            {% if resume.summary %}
+              <p class="lead">{{ resume.summary }}</p>
+            {% endif %}
+            <div class="resume-meta">
+              <span class="badge bg-info me-2">
+                {% if resume.template %}{{ resume.template.name }}{% else %}No Template{% endif %}
+              </span>
+              <span class="badge bg-light text-dark me-2">{{ resume.language|upper }}</span>
+              <span class="badge bg-{% if resume.visibility == 'PRIVATE' %}secondary{% elif resume.visibility == 'PUBLIC' %}success{% else %}warning{% endif %}">
+                {{ resume.get_visibility_display }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Work Experience Section -->
+          {% if work_experiences %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-briefcase me-2"></i>Work Experience
+            </h3>
+            {% for exp in work_experiences %}
+            <div class="experience-item mb-3">
+              <div class="d-flex justify-content-between">
+                <h5 class="mb-1">{{ exp.job_title }}</h5>
+                <small class="text-muted">{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</small>
+              </div>
+              <h6 class="text-primary mb-2">{{ exp.company }}</h6>
+              {% if exp.location %}
+                <p class="text-muted mb-2"><i class="bi bi-geo-alt me-1"></i>{{ exp.location }}</p>
+              {% endif %}
+              {% if exp.description %}
+                <p>{{ exp.description }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <!-- Education Section -->
+          {% if educations %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-mortarboard me-2"></i>Education
+            </h3>
+            {% for edu in educations %}
+            <div class="education-item mb-3">
+              <div class="d-flex justify-content-between">
+                <h5 class="mb-1">{{ edu.degree }}</h5>
+                <small class="text-muted">{{ edu.start_date|date:"M Y" }} - {{ edu.end_date|date:"M Y" }}</small>
+              </div>
+              <h6 class="text-primary mb-2">{{ edu.institution }}</h6>
+              {% if edu.location %}
+                <p class="text-muted mb-2"><i class="bi bi-geo-alt me-1"></i>{{ edu.location }}</p>
+              {% endif %}
+              {% if edu.gpa %}
+                <p class="mb-2"><strong>GPA:</strong> {{ edu.gpa }}</p>
+              {% endif %}
+              {% if edu.description %}
+                <p>{{ edu.description }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <!-- Technical Skills Section -->
+          {% if technical_skills %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-code-slash me-2"></i>Technical Skills
+            </h3>
+            {% for skill in technical_skills %}
+            <div class="skill-item mb-2">
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold">{{ skill.name }}</span>
+                <span class="badge bg-primary">{{ skill.get_proficiency_display }}</span>
+              </div>
+              {% if skill.description %}
+                <small class="text-muted">{{ skill.description }}</small>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <!-- Projects Section -->
+          {% if projects %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-folder me-2"></i>Projects
+            </h3>
+            {% for project in projects %}
+            <div class="project-item mb-3">
+              <div class="d-flex justify-content-between">
+                <h5 class="mb-1">{{ project.title }}</h5>
+                <small class="text-muted">{{ project.start_date|date:"M Y" }} - {% if project.end_date %}{{ project.end_date|date:"M Y" }}{% else %}Present{% endif %}</small>
+              </div>
+              {% if project.role %}
+                <h6 class="text-primary mb-2">{{ project.role }}</h6>
+              {% endif %}
+              {% if project.description %}
+                <p>{{ project.description }}</p>
+              {% endif %}
+              {% if project.technologies.all %}
+                <p class="mb-2"><strong>Technologies:</strong> {{ project.technologies.all|join:", " }}</p>
+              {% endif %}
+              {% if project.url %}
+                <a href="{{ project.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-link-45deg me-1"></i>View Project
+                </a>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <!-- Certifications Section -->
+          {% if certifications %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-award me-2"></i>Certifications
+            </h3>
+            {% for cert in certifications %}
+            <div class="certification-item mb-3">
+              <div class="d-flex justify-content-between">
+                <h5 class="mb-1">{{ cert.name }}</h5>
+                <small class="text-muted">{{ cert.issue_date|date:"M Y" }}</small>
+              </div>
+              <h6 class="text-primary mb-2">{{ cert.issuer }}</h6>
+              {% if cert.credential_id %}
+                <p class="mb-2"><strong>Credential ID:</strong> {{ cert.credential_id }}</p>
+              {% endif %}
+              {% if cert.verification_url %}
+                <a href="{{ cert.verification_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-link-45deg me-1"></i>Verify
+                </a>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <!-- Awards Section -->
+          {% if awards %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-trophy me-2"></i>Awards & Recognition
+            </h3>
+            {% for award in awards %}
+            <div class="award-item mb-3">
+              <div class="d-flex justify-content-between">
+                <h5 class="mb-1">{{ award.title }}</h5>
+                <small class="text-muted">{{ award.issue_date|date:"M Y" }}</small>
+              </div>
+              <h6 class="text-primary mb-2">{{ award.issuer }}</h6>
+              {% if award.description %}
+                <p>{{ award.description }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <!-- Languages Section -->
+          {% if languages %}
+          <div class="resume-section mb-4">
+            <h3 class="section-title">
+              <i class="bi bi-translate me-2"></i>Languages
+            </h3>
+            {% for lang in languages %}
+            <div class="language-item mb-2">
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold">{{ lang.name }}</span>
+                <span class="badge bg-success">{{ lang.get_proficiency_display }}</span>
+              </div>
+              {% if lang.certification %}
+                <small class="text-muted">{{ lang.certification }}</small>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Quick Actions</h5>
+          <div class="d-grid gap-2">
+            <a href="{% url 'work_experience_create' %}" class="btn btn-outline-primary">
+              <i class="bi bi-plus-circle me-2"></i>Add Work Experience
+            </a>
+            <a href="{% url 'education_create' %}" class="btn btn-outline-primary">
+              <i class="bi bi-plus-circle me-2"></i>Add Education
+            </a>
+            <a href="{% url 'technicalskill_create' %}" class="btn btn-outline-primary">
+              <i class="bi bi-plus-circle me-2"></i>Add Skills
+            </a>
+            <a href="{% url 'project_create' %}" class="btn btn-outline-primary">
+              <i class="bi bi-plus-circle me-2"></i>Add Project
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Resume Stats -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Resume Statistics</h5>
+          <div class="row text-center">
+            <div class="col-6">
+              <div class="stat-item">
+                <h4 class="text-primary">{{ work_experiences.count }}</h4>
+                <small>Work Experience</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <h4 class="text-success">{{ educations.count }}</h4>
+                <small>Education</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <h4 class="text-warning">{{ technical_skills.count }}</h4>
+                <small>Skills</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-item">
+                <h4 class="text-info">{{ projects.count }}</h4>
+                <small>Projects</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.resume-section {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.resume-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  color: #333;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.experience-item, .education-item, .project-item, .certification-item, .award-item {
+  padding: 1rem;
+  border-left: 3px solid #007bff;
+  background-color: #f8f9fa;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.stat-item {
+  padding: 1rem 0;
+}
+
+.stat-item h4 {
+  margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %} 

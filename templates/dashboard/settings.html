@@ -1,0 +1,140 @@
+{% extends 'resume_base.html' %}
+
+{% block title %}
+Settings - DiamondTalent
+{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Settings</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item active">Settings</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Account Settings</h5>
+          <p>Manage your account preferences and settings</p>
+          
+          <div class="row">
+            {% for section in settings_sections %}
+            <div class="col-md-6 col-lg-3 mb-4">
+              <div class="card settings-card">
+                <div class="card-body text-center">
+                  <div class="settings-icon mb-3">
+                    <i class="{{ section.icon }} fs-1 text-primary"></i>
+                  </div>
+                  <h6 class="card-title">{{ section.title }}</h6>
+                  <p class="card-text small text-muted">{{ section.description }}</p>
+                  <button class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-gear me-1"></i>Configure
+                  </button>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Information -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Profile Information</h5>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" value="{{ user.first_name|default:'Not set' }}" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" value="{{ user.last_name|default:'Not set' }}" readonly>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" value="{{ user.email }}" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" value="{{ user.username }}" readonly>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Role</label>
+              <input type="text" class="form-control" value="{{ user.role|title }}" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" class="form-control" value="{{ user.phone|default:'Not set' }}" readonly>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Date Joined</label>
+              <input type="text" class="form-control" value="{{ user.date_joined|date:'M d, Y' }}" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last Login</label>
+              <input type="text" class="form-control" value="{{ user.last_login|date:'M d, Y H:i'|default:'Never' }}" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Quick Actions</h5>
+          <div class="d-flex flex-column gap-2">
+            <a href="{% url 'account_login' %}" class="btn btn-primary">
+              <i class="bi bi-envelope me-2"></i>Account Login
+            </a>
+            <a href="{% url 'account_logout' %}" class="btn btn-warning">
+              <i class="bi bi-key me-2"></i>Sign Out
+            </a>
+            <a href="{% url 'account_logout' %}" class="btn btn-danger">
+              <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Information -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">System Information</h5>
+          <div class="small">
+            <p><strong>Version:</strong> 1.0.0</p>
+            <p><strong>Last Updated:</strong> {{ user.date_joined|date:'M d, Y' }}</p>
+            <p><strong>Status:</strong> <span class="badge bg-success">Active</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("Settings page loaded successfully!");
+});
+</script>
+{% endblock %} 

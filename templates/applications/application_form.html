@@ -1,0 +1,118 @@
+{% extends 'resume_base.html' %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Edit Application</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'applications:application_list' %}">Applications</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'applications:application_detail' object.pk %}">Details</a></li>
+      <li class="breadcrumb-item active">Edit</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Update Application</h5>
+          
+          <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Job Title</label>
+                <input type="text" class="form-control" value="{{ object.job.title }}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Company</label>
+                <input type="text" class="form-control" value="{{ object.job.company }}" readonly>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Applied Date</label>
+                <input type="text" class="form-control" value="{{ object.applied_date|date:'M d, Y' }}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Current Status</label>
+                <input type="text" class="form-control" value="{{ object.status_display }}" readonly>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="{{ form.resume.id_for_label }}" class="form-label">Resume</label>
+              {{ form.resume }}
+              {% if form.resume.errors %}
+                <div class="text-danger">
+                  {{ form.resume.errors }}
+                </div>
+              {% endif %}
+              <div class="form-text">Choose a resume to attach to your application</div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="{{ form.cover_letter.id_for_label }}" class="form-label">Cover Letter</label>
+              {{ form.cover_letter }}
+              {% if form.cover_letter.errors %}
+                <div class="text-danger">
+                  {{ form.cover_letter.errors }}
+                </div>
+              {% endif %}
+              <div class="form-text">Explain why you're interested in this position and how your skills match the requirements</div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                  <i class="bi bi-check"></i> Update Application
+                </button>
+                <a href="{% url 'applications:application_detail' object.pk %}" class="btn btn-secondary">
+                  <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Application Info</h5>
+          
+          <div class="mb-3">
+            <strong>Job:</strong>
+            <p>{{ object.job.title }} at {{ object.job.company }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Location:</strong>
+            <p>{{ object.job.location }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Job Type:</strong>
+            <p>{{ object.job.get_job_type_display }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Salary:</strong>
+            <p>{{ object.job.get_salary_display }}</p>
+          </div>
+          
+          <a href="{% url 'jobs:job_detail' object.job.pk %}" class="btn btn-outline-primary">
+            <i class="bi bi-eye"></i> View Job Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} 

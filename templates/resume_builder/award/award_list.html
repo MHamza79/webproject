@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Awards</h2>
+    <a href="{% url 'award_create' %}" class="btn btn-primary mb-3">Add Award</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Issuer</th>
+                <th>Issue Date</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for award in awards %}
+            <tr>
+                <td>{{ award.title }}</td>
+                <td>{{ award.issuer }}</td>
+                <td>{{ award.issue_date }}</td>
+                <td>{{ award.category }}</td>
+                <td>
+                    <a href="{% url 'award_detail' award.pk %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'award_update' award.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'award_delete' award.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No awards found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

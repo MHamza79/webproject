@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Languages</h2>
+    <a href="{% url 'language_create' %}" class="btn btn-primary mb-3">Add Language</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Proficiency</th>
+                <th>Certification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for language in languages %}
+            <tr>
+                <td>{{ language.name }}</td>
+                <td>{{ language.get_proficiency_display }}</td>
+                <td>{{ language.certification }}</td>
+                <td>
+                    <a href="{% url 'language_detail' language.pk %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'language_update' language.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'language_delete' language.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No languages found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

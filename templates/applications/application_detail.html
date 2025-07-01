@@ -1,0 +1,137 @@
+{% extends 'resume_base.html' %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Application Details</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'applications:application_list' %}">Applications</a></li>
+      <li class="breadcrumb-item active">Details</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Application Information</h5>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Job Title:</strong>
+              <p>{{ application.job.title }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Company:</strong>
+              <p>{{ application.job.company }}</p>
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Location:</strong>
+              <p>{{ application.job.location }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Job Type:</strong>
+              <p>{{ application.job.get_job_type_display }}</p>
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Applied Date:</strong>
+              <p>{{ application.applied_date|date:"F d, Y" }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Status:</strong>
+              <p>
+                <span class="badge bg-{% if application.status == 'accepted' %}success{% elif application.status == 'rejected' %}danger{% elif application.status == 'shortlisted' %}warning{% elif application.status == 'interviewed' %}info{% else %}secondary{% endif %}">
+                  {{ application.status_display }}
+                </span>
+              </p>
+            </div>
+          </div>
+          
+          {% if application.resume %}
+            <div class="row mb-3">
+              <div class="col-12">
+                <strong>Resume Used:</strong>
+                <p>{{ application.resume.name }}</p>
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if application.cover_letter %}
+            <div class="row mb-3">
+              <div class="col-12">
+                <strong>Cover Letter:</strong>
+                <div class="border rounded p-3 bg-light">
+                  {{ application.cover_letter|linebreaks }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if application.notes %}
+            <div class="row mb-3">
+              <div class="col-12">
+                <strong>Notes:</strong>
+                <div class="border rounded p-3 bg-light">
+                  {{ application.notes|linebreaks }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          
+          <div class="row">
+            <div class="col-12">
+              <a href="{% url 'applications:application_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Applications
+              </a>
+              {% if application.status == 'pending' %}
+                <a href="{% url 'applications:application_update' application.pk %}" class="btn btn-warning">
+                  <i class="bi bi-pencil"></i> Edit Application
+                </a>
+                <a href="{% url 'applications:withdraw_application' application.pk %}" class="btn btn-danger">
+                  <i class="bi bi-x-circle"></i> Withdraw Application
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Job Details</h5>
+          
+          <div class="mb-3">
+            <strong>Salary Range:</strong>
+            <p>{{ application.job.get_salary_display }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Experience Level:</strong>
+            <p>{{ application.job.get_experience_level_display }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Posted Date:</strong>
+            <p>{{ application.job.posted_date|date:"M d, Y" }}</p>
+          </div>
+          
+          <a href="{% url 'jobs:job_detail' application.job.pk %}" class="btn btn-primary">
+            <i class="bi bi-eye"></i> View Job Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} 

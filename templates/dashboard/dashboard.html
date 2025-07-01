@@ -1,12 +1,162 @@
 {% extends 'resume_base.html' %}
 
 {% block title %}
-Sample Page - NiceAdmin
+Dashboard - DiamondTalent
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <h1>Sample dashboard</h1>
-  <p>This is some sample content extending the base template.</p>
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
 </div>
+
+<section class="section dashboard">
+  <div class="row">
+    <!-- Left side columns -->
+    <div class="col-lg-8">
+      <div class="row">
+        <!-- Resumes Card -->
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card sales-card">
+            <div class="card-body">
+              <h5 class="card-title">Resumes <span>| This Month</span></h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ total_resumes }}</h6>
+                  <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Applications Card -->
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card revenue-card">
+            <div class="card-body">
+              <h5 class="card-title">Applications <span>| This Month</span></h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-paperclip"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ total_applications }}</h6>
+                  <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Listings Card -->
+        <div class="col-xxl-4 col-xl-12">
+          <div class="card info-card customers-card">
+            <div class="card-body">
+              <h5 class="card-title">Job Listings <span>| This Year</span></h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-briefcase"></i>
+                </div>
+                <div class="ps-3">
+                  <h6>{{ total_jobs }}</h6>
+                  <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Applications -->
+        <div class="col-12">
+          <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+              <h5 class="card-title">Recent Applications <span>| Today</span></h5>
+              <table class="table table-borderless datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Applicant</th>
+                    <th scope="col">Job Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for application in recent_applications %}
+                  <tr>
+                    <th scope="row"><a href="#">{{ application.id }}</a></th>
+                    <td>{{ application.applicant }}</td>
+                    <td><a href="#" class="text-primary">{{ application.job_title }}</a></td>
+                    <td><span class="badge bg-{% if application.status == 'Approved' %}success{% elif application.status == 'Pending' %}warning{% else %}secondary{% endif %}">{{ application.status }}</span></td>
+                    <td>{{ application.date }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side columns -->
+    <div class="col-lg-4">
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+          <div class="activity">
+            {% for activity in recent_activities %}
+            <div class="activity-item d-flex">
+              <div class="activite-label">{{ activity.time }}</div>
+              <i class='bi bi-circle-fill activity-badge text-{{ activity.type }} align-self-start'></i>
+              <div class="activity-content">
+                {{ activity.content }}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Quick Actions</h5>
+          <div class="d-flex flex-column gap-3">
+            <a href="{% url 'resume_list' %}" class="btn btn-primary">
+              <i class="bi bi-file-earmark-text me-2"></i>Manage Resumes
+            </a>
+            <a href="{% url 'applications:application_list' %}" class="btn btn-success">
+              <i class="bi bi-paperclip me-2"></i>View Applications
+            </a>
+            <a href="{% url 'jobs:job_list' %}" class="btn btn-info">
+              <i class="bi bi-briefcase me-2"></i>Browse Jobs
+            </a>
+            <a href="{% url 'settings' %}" class="btn btn-warning">
+              <i class="bi bi-gear me-2"></i>Settings
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Initialize charts and other dashboard components
+  console.log("Dashboard loaded successfully!");
+});
+</script>
 {% endblock %}

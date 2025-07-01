@@ -1,0 +1,155 @@
+{% extends 'resume_base.html' %}
+{% load static %}
+
+{% block title %}
+{% if form.instance.pk %}Edit Resume{% else %}Create Resume{% endif %} - DiamondTalent
+{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>{% if form.instance.pk %}Edit Resume{% else %}Create Resume{% endif %}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'resume_list' %}">Resumes</a></li>
+      <li class="breadcrumb-item active">{% if form.instance.pk %}Edit{% else %}Create{% endif %}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Resume Information</h5>
+          
+          <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="{{ form.title.id_for_label }}" class="form-label">Resume Title *</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                  <div class="text-danger small">{{ form.title.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.slug.id_for_label }}" class="form-label">URL Slug *</label>
+                {{ form.slug }}
+                {% if form.slug.errors %}
+                  <div class="text-danger small">{{ form.slug.errors.0 }}</div>
+                {% endif %}
+                <div class="form-text">A unique identifier for your resume URL</div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="{{ form.summary.id_for_label }}" class="form-label">Professional Summary</label>
+              {{ form.summary }}
+              {% if form.summary.errors %}
+                <div class="text-danger small">{{ form.summary.errors.0 }}</div>
+              {% endif %}
+              <div class="form-text">A brief overview of your professional background and career objectives</div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="{{ form.template.id_for_label }}" class="form-label">Template</label>
+                {{ form.template }}
+                {% if form.template.errors %}
+                  <div class="text-danger small">{{ form.template.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.language.id_for_label }}" class="form-label">Language</label>
+                {{ form.language }}
+                {% if form.language.errors %}
+                  <div class="text-danger small">{{ form.language.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="{{ form.visibility.id_for_label }}" class="form-label">Visibility</label>
+                {{ form.visibility }}
+                {% if form.visibility.errors %}
+                  <div class="text-danger small">{{ form.visibility.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.tags.id_for_label }}" class="form-label">Tags</label>
+                {{ form.tags }}
+                {% if form.tags.errors %}
+                  <div class="text-danger small">{{ form.tags.errors.0 }}</div>
+                {% endif %}
+                <div class="form-text">Comma-separated tags to organize your resumes</div>
+              </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-2"></i>
+                {% if form.instance.pk %}Update Resume{% else %}Create Resume{% endif %}
+              </button>
+              <a href="{% url 'resume_list' %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle me-2"></i>Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Tips</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2">
+              <i class="bi bi-lightbulb text-warning me-2"></i>
+              Choose a descriptive title that reflects your target role
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-lightbulb text-warning me-2"></i>
+              Write a compelling summary that highlights your key strengths
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-lightbulb text-warning me-2"></i>
+              Select a template that matches your industry and experience level
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-lightbulb text-warning me-2"></i>
+              Use tags to organize multiple resumes for different purposes
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Auto-generate slug from title
+  const titleField = document.getElementById('{{ form.title.id_for_label }}');
+  const slugField = document.getElementById('{{ form.slug.id_for_label }}');
+  
+  if (titleField && slugField) {
+    titleField.addEventListener('input', function() {
+      if (!slugField.value) { // Only auto-generate if slug is empty
+        const slug = titleField.value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        slugField.value = slug;
+      }
+    });
+  }
+});
+</script>
+{% endblock %} 

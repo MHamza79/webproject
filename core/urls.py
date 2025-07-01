@@ -25,6 +25,9 @@ web_patterns = [
     # resume_builder web URLs
     path('web/', include('resume_builder.web.urls')),
     path('web/', include('accounts.web.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('jobs/', include('jobs.urls')),
+    path('applications/', include('applications.urls')),
     path('', include('dashboard.urls')),
 ]
 apis_patterns = [

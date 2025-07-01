@@ -1,0 +1,104 @@
+{% extends 'resume_base.html' %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Withdraw Application</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'applications:application_list' %}">Applications</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'applications:application_detail' application.pk %}">Details</a></li>
+      <li class="breadcrumb-item active">Withdraw</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Confirm Withdrawal</h5>
+          
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Warning:</strong> This action cannot be undone. Once you withdraw your application, you will need to reapply if you change your mind.
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Job Title:</strong>
+              <p>{{ application.job.title }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Company:</strong>
+              <p>{{ application.job.company }}</p>
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Applied Date:</strong>
+              <p>{{ application.applied_date|date:"M d, Y" }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Current Status:</strong>
+              <p>
+                <span class="badge bg-secondary">{{ application.status_display }}</span>
+              </p>
+            </div>
+          </div>
+          
+          <form method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-12">
+                <button type="submit" class="btn btn-danger">
+                  <i class="bi bi-x-circle"></i> Yes, Withdraw Application
+                </button>
+                <a href="{% url 'applications:application_detail' application.pk %}" class="btn btn-secondary">
+                  <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Application Summary</h5>
+          
+          <div class="mb-3">
+            <strong>Location:</strong>
+            <p>{{ application.job.location }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Job Type:</strong>
+            <p>{{ application.job.get_job_type_display }}</p>
+          </div>
+          
+          <div class="mb-3">
+            <strong>Salary:</strong>
+            <p>{{ application.job.get_salary_display }}</p>
+          </div>
+          
+          {% if application.resume %}
+            <div class="mb-3">
+              <strong>Resume Used:</strong>
+              <p>{{ application.resume.name }}</p>
+            </div>
+          {% endif %}
+          
+          <a href="{% url 'jobs:job_detail' application.job.pk %}" class="btn btn-outline-primary">
+            <i class="bi bi-eye"></i> View Job Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} 

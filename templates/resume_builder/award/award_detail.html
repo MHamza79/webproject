@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Award Detail</h2>
+    <table class="table table-bordered">
+        <tr><th>Title</th><td>{{ award.title }}</td></tr>
+        <tr><th>Issuer</th><td>{{ award.issuer }}</td></tr>
+        <tr><th>Issue Date</th><td>{{ award.issue_date }}</td></tr>
+        <tr><th>Category</th><td>{{ award.category }}</td></tr>
+        <tr><th>Description</th><td>{{ award.description }}</td></tr>
+        <tr><th>Impact Metrics</th><td>{{ award.impact_metrics }}</td></tr>
+    </table>
+    <a href="{% url 'award_update' award.pk %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'award_delete' award.pk %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'award_list' %}" class="btn btn-secondary">Back to List</a>
+</div>
+{% endblock %} 
