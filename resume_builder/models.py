@@ -1,7 +1,14 @@
 from django.conf import settings
-from django.contrib.postgres.indexes import GinIndex
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+
+# Try to import GinIndex for PostgreSQL, fallback for other databases
+try:
+    from django.contrib.postgres.indexes import GinIndex
+    HAS_POSTGRES = True
+except ImportError:
+    GinIndex = None
+    HAS_POSTGRES = False
 
 
 # -----------------------------
@@ -26,7 +33,7 @@ class ResumeTemplate(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        indexes = [GinIndex(fields=['config'])]
+        indexes = [GinIndex(fields=['config'])] if HAS_POSTGRES else []
         ordering = ['-version', 'name']
 
     def __str__(self):

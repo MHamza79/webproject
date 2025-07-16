@@ -1,14 +1,119 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+{% if view.object %}Edit Award{% else %}Add Award{% endif %} - DiamondTalent
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Award</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save</button>
-        <a href="{% url 'award_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+<div class="pagetitle">
+  <h1>{% if view.object %}Edit Award{% else %}Add Award{% endif %}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'award_list' %}">Awards</a></li>
+      <li class="breadcrumb-item active">{% if view.object %}Edit{% else %}Add{% endif %}</li>
+    </ol>
+  </nav>
 </div>
+
+<section class="section">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">
+        {% if view.object %}Edit Award{% else %}Add Award{% endif %}
+      </h5>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.resume.label }}</label>
+            {{ form.resume|add_class:"form-control" }}
+            {% if form.resume.help_text %}
+              <small class="form-text text-muted">{{ form.resume.help_text }}</small>
+            {% endif %}
+            {% for err in form.resume.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.title.label }}</label>
+            {{ form.title|add_class:"form-control" }}
+            {% if form.title.help_text %}
+              <small class="form-text text-muted">{{ form.title.help_text }}</small>
+            {% endif %}
+            {% for err in form.title.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.issuer.label }}</label>
+            {{ form.issuer|add_class:"form-control" }}
+            {% if form.issuer.help_text %}
+              <small class="form-text text-muted">{{ form.issuer.help_text }}</small>
+            {% endif %}
+            {% for err in form.issuer.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.category.label }}</label>
+            {{ form.category|add_class:"form-control" }}
+            {% if form.category.help_text %}
+              <small class="form-text text-muted">{{ form.category.help_text }}</small>
+            {% endif %}
+            {% for err in form.category.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.issue_date.label }}</label>
+            {{ form.issue_date|add_class:"form-control"|attr:"type:date" }}
+            {% if form.issue_date.help_text %}
+              <small class="form-text text-muted">{{ form.issue_date.help_text }}</small>
+            {% endif %}
+            {% for err in form.issue_date.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.is_visible.label }}</label>
+            <div class="form-check">
+              {{ form.is_visible|add_class:"form-check-input" }}
+              <label class="form-check-label" for="{{ form.is_visible.id_for_label }}">
+                Make this award visible on resume
+              </label>
+            </div>
+            {% for err in form.is_visible.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">{{ form.description.label }}</label>
+            {{ form.description|add_class:"form-control"|attr:"rows:4" }}
+            {% if form.description.help_text %}
+              <small class="form-text text-muted">{{ form.description.help_text }}</small>
+            {% endif %}
+            {% for err in form.description.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">{{ form.impact_metrics.label }}</label>
+            {{ form.impact_metrics|add_class:"form-control"|attr:"rows:3" }}
+            {% if form.impact_metrics.help_text %}
+              <small class="form-text text-muted">{{ form.impact_metrics.help_text }}</small>
+            {% endif %}
+            {% for err in form.impact_metrics.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Save</button>
+        <a href="{% url 'award_list' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</section>
 {% endblock %} 

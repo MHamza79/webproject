@@ -1,14 +1,139 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+{% if view.object %}Edit Project{% else %}Add Project{% endif %} - DiamondTalent
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Project</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save</button>
-        <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+<div class="pagetitle">
+  <h1>{% if view.object %}Edit Project{% else %}Add Project{% endif %}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'project_list' %}">Projects</a></li>
+      <li class="breadcrumb-item active">{% if view.object %}Edit{% else %}Add{% endif %}</li>
+    </ol>
+  </nav>
 </div>
+
+<section class="section">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">
+        {% if view.object %}Edit Project{% else %}Add Project{% endif %}
+      </h5>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.resume.label }}</label>
+            {{ form.resume|add_class:"form-control" }}
+            {% if form.resume.help_text %}
+              <small class="form-text text-muted">{{ form.resume.help_text }}</small>
+            {% endif %}
+            {% for err in form.resume.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.title.label }}</label>
+            {{ form.title|add_class:"form-control" }}
+            {% if form.title.help_text %}
+              <small class="form-text text-muted">{{ form.title.help_text }}</small>
+            {% endif %}
+            {% for err in form.title.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.role.label }}</label>
+            {{ form.role|add_class:"form-control" }}
+            {% if form.role.help_text %}
+              <small class="form-text text-muted">{{ form.role.help_text }}</small>
+            {% endif %}
+            {% for err in form.role.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.url.label }}</label>
+            {{ form.url|add_class:"form-control" }}
+            {% if form.url.help_text %}
+              <small class="form-text text-muted">{{ form.url.help_text }}</small>
+            {% endif %}
+            {% for err in form.url.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.start_date.label }}</label>
+            {{ form.start_date|add_class:"form-control"|attr:"type:date" }}
+            {% if form.start_date.help_text %}
+              <small class="form-text text-muted">{{ form.start_date.help_text }}</small>
+            {% endif %}
+            {% for err in form.start_date.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.end_date.label }}</label>
+            {{ form.end_date|add_class:"form-control"|attr:"type:date" }}
+            {% if form.end_date.help_text %}
+              <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
+            {% endif %}
+            {% for err in form.end_date.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.is_active.label }}</label>
+            <div class="form-check">
+              {{ form.is_active|add_class:"form-check-input" }}
+              <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                Mark as active project
+              </label>
+            </div>
+            {% for err in form.is_active.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ form.technologies.label }}</label>
+            {{ form.technologies|add_class:"form-control" }}
+            {% if form.technologies.help_text %}
+              <small class="form-text text-muted">{{ form.technologies.help_text }}</small>
+            {% endif %}
+            {% for err in form.technologies.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">{{ form.description.label }}</label>
+            {{ form.description|add_class:"form-control"|attr:"rows:4" }}
+            {% if form.description.help_text %}
+              <small class="form-text text-muted">{{ form.description.help_text }}</small>
+            {% endif %}
+            {% for err in form.description.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">{{ form.outcomes.label }}</label>
+            {{ form.outcomes|add_class:"form-control"|attr:"rows:3" }}
+            {% if form.outcomes.help_text %}
+              <small class="form-text text-muted">{{ form.outcomes.help_text }}</small>
+            {% endif %}
+            {% for err in form.outcomes.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Save</button>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</section>
 {% endblock %} 

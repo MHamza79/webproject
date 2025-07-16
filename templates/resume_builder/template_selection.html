@@ -3,12 +3,94 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Select Resume Template</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save Template Selection</button>
-        <a href="{% url 'resume_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Select Resume Template</h5>
+                    <p class="card-text">Choose a template for your resume. You can change this later.</p>
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            {% for choice in form.template.field.choices %}
+                                {% if choice.0 %}
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card template-card h-100">
+                                        <div class="card-body text-center">
+                                            <div class="template-preview mb-3">
+                                                <i class="bi bi-file-earmark-text display-1 text-primary"></i>
+                                            </div>
+                                            <h6 class="card-title">{{ choice.1 }}</h6>
+                                            <p class="card-text small text-muted">
+                                                {% if choice.0 == 'CLASSIC' %}
+                                                    Professional and traditional layout
+                                                {% elif choice.0 == 'MODERN' %}
+                                                    Clean and contemporary design
+                                                {% elif choice.0 == 'CREATIVE' %}
+                                                    Unique and creative layout
+                                                {% elif choice.0 == 'TECHNICAL' %}
+                                                    Technical-focused design
+                                                {% else %}
+                                                    Professional resume template
+                                                {% endif %}
+                                            </p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="{{ form.template.name }}" 
+                                                       id="template_{{ choice.0 }}" value="{{ choice.0 }}"
+                                                       {% if form.template.value == choice.0 %}checked{% endif %}>
+                                                <label class="form-check-label" for="template_{{ choice.0 }}">
+                                                    Select this template
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        {% if form.template.errors %}
+                            <div class="alert alert-danger mt-3">
+                                {{ form.template.errors.0 }}
+                            </div>
+                        {% endif %}
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Apply Template</button>
+                            <a href="{% url 'resume_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+.template-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.template-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.template-card .form-check-input:checked + .form-check-label {
+    color: var(--bs-primary);
+    font-weight: bold;
+}
+
+.template-preview {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+}
+</style>
 {% endblock %} 

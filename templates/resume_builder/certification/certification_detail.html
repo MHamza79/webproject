@@ -1,1 +1,104 @@
- 
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ certification.name }} - DiamondTalent{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Certification Details</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'certification_list' %}">Certifications</a></li>
+      <li class="breadcrumb-item active">{{ certification.name }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">{{ certification.name }}</h5>
+            <div>
+              <a href="{% url 'certification_update' certification.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Edit
+              </a>
+              <a href="{% url 'certification_delete' certification.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Delete
+              </a>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label fw-bold">Issuer</label>
+                <p>{{ certification.issuer }}</p>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label fw-bold">Issue Date</label>
+                <p>{{ certification.issue_date }}</p>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label fw-bold">Expiration Date</label>
+                <p>
+                  {% if certification.expiration_date %}
+                    {{ certification.expiration_date }}
+                    {% if certification.expiration_date < today %}
+                      <span class="badge bg-danger">Expired</span>
+                    {% else %}
+                      <span class="badge bg-success">Valid</span>
+                    {% endif %}
+                  {% else %}
+                    <span class="text-muted">No expiration date</span>
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              {% if certification.credential_id %}
+              <div class="mb-3">
+                <label class="form-label fw-bold">Credential ID</label>
+                <p>{{ certification.credential_id }}</p>
+              </div>
+              {% endif %}
+              
+              {% if certification.verification_url %}
+              <div class="mb-3">
+                <label class="form-label fw-bold">Verification URL</label>
+                <p><a href="{{ certification.verification_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-link-45deg"></i> Verify Certificate
+                </a></p>
+              </div>
+              {% endif %}
+              
+              {% if certification.skills.all %}
+              <div class="mb-3">
+                <label class="form-label fw-bold">Related Skills</label>
+                <div>
+                  {% for skill in certification.skills.all %}
+                    <span class="badge bg-info me-1">{{ skill.name }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="mt-3">
+            <a href="{% url 'certification_list' %}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} 

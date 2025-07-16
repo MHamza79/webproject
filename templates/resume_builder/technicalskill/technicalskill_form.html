@@ -3,11 +3,97 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Technical Skill</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save</button>
-        <a href="{% url 'technicalskill_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{% if form.instance.pk %}Edit{% else %}Add{% endif %} Technical Skill</h5>
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.resume.id_for_label }}" class="form-label">Resume *</label>
+                                {{ form.resume }}
+                                {% if form.resume.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.resume.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.technology.id_for_label }}" class="form-label">Technology *</label>
+                                {{ form.technology }}
+                                {% if form.technology.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.technology.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.proficiency.id_for_label }}" class="form-label">Proficiency Level *</label>
+                                {{ form.proficiency }}
+                                {% if form.proficiency.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.proficiency.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.years_experience.id_for_label }}" class="form-label">Years of Experience</label>
+                                {{ form.years_experience }}
+                                {% if form.years_experience.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.years_experience.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.last_used.id_for_label }}" class="form-label">Last Used</label>
+                                {{ form.last_used }}
+                                {% if form.last_used.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.last_used.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.project_count.id_for_label }}" class="form-label">Project Count</label>
+                                {{ form.project_count }}
+                                {% if form.project_count.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.project_count.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="form-check">
+                                    {{ form.is_visible }}
+                                    <label class="form-check-label" for="{{ form.is_visible.id_for_label }}">
+                                        Make this skill visible on resume
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Save Technical Skill</button>
+                            <a href="{% url 'technicalskill_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
  

@@ -1,1 +1,75 @@
- 
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Education - DiamondTalent{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Education</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item active">Education</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">My Education</h5>
+          <a href="{% url 'education_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New
+          </a>
+        </div>
+        <div class="card-body">
+          {% if educations %}
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Degree & Institution</th>
+                  <th>Duration</th>
+                  <th>GPA</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for edu in educations %}
+                <tr>
+                  <td>
+                    <strong>{{ edu.degree }}</strong><br>
+                    <small>{{ edu.institution }}</small>
+                    {% if edu.location %}
+                      <br><small class="text-muted">{{ edu.location }}</small>
+                    {% endif %}
+                  </td>
+                  <td>{{ edu.start_date }} – {{ edu.end_date }}</td>
+                  <td>
+                    {% if edu.gpa %}
+                      <span class="badge bg-success">{{ edu.gpa }}</span>
+                    {% else %}
+                      <span class="text-muted">-</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="{% url 'education_detail' edu.pk %}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'education_update' edu.pk %}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'education_delete' edu.pk %}" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="alert alert-light text-center" role="alert">
+              No education entries added yet.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} 

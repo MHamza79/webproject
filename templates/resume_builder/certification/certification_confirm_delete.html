@@ -1,1 +1,31 @@
- 
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Certification - DiamondTalent{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1>Delete Certification</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'certification_list' %}">Certifications</a></li>
+      <li class="breadcrumb-item active">Delete</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title text-danger">Confirm Delete</h5>
+      <p>Are you sure you want to delete <strong>{{ object.name }}</strong> from <strong>{{ object.issuer }}</strong>?</p>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Yes, delete</button>
+        <a href="{% url 'certification_list' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %} 

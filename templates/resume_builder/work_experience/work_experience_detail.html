@@ -1,5 +1,19 @@
-{% extends 'resume_base.html' %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ experience.job_title }} - DiamondTalent{% endblock %}
+
 {% block content %}
+<div class="pagetitle">
+  <h1>Work Experience Details</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'work_experience_list' %}">Work Experience</a></li>
+      <li class="breadcrumb-item active">{{ experience.job_title }}</li>
+    </ol>
+  </nav>
+</div>
 <section class="section">
   <div class="card mb-3">
     <div class="card-body">

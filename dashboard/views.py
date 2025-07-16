@@ -1,15 +1,19 @@
 from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from datetime import datetime, timedelta
 
-# @login_required(login_url='/accounts/login/')
+@login_required(login_url='/accounts/login/')
 def dashboard(request):
     # Sample data for demonstration
+    profile_strength = 0  # Replace with actual calculation if available
+    profile_strength_offset = 163.36 - (profile_strength * 1.6336)
     context = {
         'total_resumes': 3,
         'total_applications': 5,
         'total_jobs': 12,
+        'profile_strength': profile_strength,
+        'profile_strength_offset': profile_strength_offset,
         'recent_applications': [
             {
                 'id': '#2457',

@@ -1,5 +1,19 @@
-{% extends 'resume_base.html' %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Work Experience - DiamondTalent{% endblock %}
+
 {% block content %}
+<div class="pagetitle">
+  <h1>Delete Work Experience</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'work_experience_list' %}">Work Experience</a></li>
+      <li class="breadcrumb-item active">Delete</li>
+    </ol>
+  </nav>
+</div>
 <section class="section">
   <div class="card">
     <div class="card-body">

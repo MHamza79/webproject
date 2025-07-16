@@ -1,0 +1,482 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{% block title %}DiamondTalent{% endblock %}</title>
+
+  <!-- Favicons -->
+  <link href="https://via.placeholder.com/32x32/007bff/ffffff?text=DT" rel="icon">
+  <link href="https://via.placeholder.com/180x180/007bff/ffffff?text=DT" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.bubble.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- NiceAdmin CSS -->
+  <style>
+    :root {
+      --primary-color: #012970;
+      --secondary-color: #4154f1;
+      --success-color: #2ecc71;
+      --info-color: #17a2b8;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+    }
+
+    body {
+      font-family: "Open Sans", sans-serif;
+      background-color: #f6f9ff;
+    }
+
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e1e6ef;
+      box-shadow: 0 2px 20px rgba(1, 41, 112, 0.1);
+    }
+
+    .sidebar {
+      background: #012970;
+      min-height: 100vh;
+      width: 300px;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      z-index: 996;
+      transition: all 0.3s;
+    }
+
+    .sidebar-nav {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .sidebar-nav .nav-item {
+      margin-bottom: 5px;
+    }
+
+    .sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #4154f1;
+      background: #f6f9ff;
+      padding: 10px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .sidebar-nav .nav-link i {
+      font-size: 16px;
+      margin-right: 10px;
+      color: #4154f1;
+      width: 20px;
+    }
+
+    .sidebar-nav .nav-link:hover,
+    .sidebar-nav .nav-link.active {
+      color: #4154f1;
+      background: #f6f9ff;
+    }
+
+    .main {
+      margin-top: 60px;
+      padding: 20px 30px;
+      min-height: calc(100vh - 60px);
+      transition: all 0.3s;
+      margin-left: 300px;
+    }
+
+    .card {
+      margin-bottom: 30px;
+      box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.06), 0 1px 0 0 rgba(0, 0, 0, 0.02);
+      border: none;
+      border-radius: 8px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 20px;
+      color: #012970;
+      margin-bottom: 20px;
+    }
+
+    .info-card {
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.06), 0 1px 0 0 rgba(0, 0, 0, 0.02);
+    }
+
+    .info-card .card-icon {
+      width: 50px;
+      height: 50px;
+      background: #f6f9ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #4154f1;
+    }
+
+    .sales-card .card-icon {
+      color: #2eca6a;
+      background: #e0f8e9;
+    }
+
+    .revenue-card .card-icon {
+      color: #ff771d;
+      background: #ffecdf;
+    }
+
+    .customers-card .card-icon {
+      color: #4154f1;
+      background: #e7f1ff;
+    }
+
+    .pagetitle {
+      margin-bottom: 10px;
+    }
+
+    .pagetitle h1 {
+      font-size: 24px;
+      margin-bottom: 0;
+      font-weight: 700;
+      color: #012970;
+    }
+
+    .breadcrumb {
+      background-color: transparent;
+      padding: 0;
+      margin: 0;
+    }
+
+    .breadcrumb-item a {
+      color: #899bbd;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+      color: #51678f;
+      font-weight: 600;
+    }
+
+    .table {
+      color: #012970;
+    }
+
+    .table th {
+      font-weight: 600;
+      background-color: #f6f9ff;
+      border-color: #e1e6ef;
+    }
+
+    .badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+    }
+
+    .activity {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .activity-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #e1e6ef;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activite-label {
+      color: #899bbd;
+      font-size: 12px;
+      font-weight: 600;
+      min-width: 50px;
+    }
+
+    .activity-badge {
+      font-size: 8px;
+      margin: 0 10px;
+    }
+
+    .activity-content {
+      color: #012970;
+      font-size: 14px;
+    }
+
+    .btn {
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      display: inline-block;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      background-color: #4154f1;
+      border-color: #4154f1;
+      color: #fff;
+    }
+
+    .btn-success {
+      background-color: #2eca6a;
+      border-color: #2eca6a;
+      color: #fff;
+    }
+
+    .btn-info {
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+      color: #fff;
+    }
+
+    .btn-warning {
+      background-color: #ff771d;
+      border-color: #ff771d;
+      color: #fff;
+    }
+
+    .footer {
+      padding: 20px 0;
+      color: #012970;
+      border-top: 1px solid #e1e6ef;
+      text-align: center;
+    }
+
+    .back-to-top {
+      position: fixed;
+      visibility: hidden;
+      opacity: 0;
+      right: 15px;
+      bottom: 15px;
+      z-index: 996;
+      background: #4154f1;
+      width: 40px;
+      height: 40px;
+      border-radius: 50px;
+      transition: all 0.4s;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .back-to-top.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .back-to-top i {
+      font-size: 24px;
+      color: #fff;
+      line-height: 0;
+    }
+
+    @media (max-width: 1199px) {
+      .sidebar {
+        left: -300px;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .sidebar-nav {
+        padding: 0;
+      }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{% url 'dashboard' %}" class="logo d-flex align-items-center">
+        <img src="https://via.placeholder.com/40x40/007bff/ffffff?text=DT" alt="">
+        <span class="d-none d-lg-block">DiamondTalent</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=U" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">
+              {% if user.is_authenticated %}{{ user.username }}{% else %}Guest{% endif %}
+            </span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{ user.username }}</h6>
+              <span>{{ user.email }}</span>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'account_login' %}"><i class="bi bi-person"></i><span>My Account</span></a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'account_logout' %}"><i class="bi bi-box-arrow-right"></i><span>Sign Out</span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'dashboard' %}">
+          <i class="bi bi-grid"></i><span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'resume_list' %}">
+          <i class="bi bi-file-earmark-text"></i><span>Resumes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'work_experience_list' %}">
+          <i class="bi bi-briefcase"></i><span>Work Experience</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'education_list' %}">
+          <i class="bi bi-mortarboard"></i><span>Education</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'project_list' %}">
+          <i class="bi bi-folder"></i><span>Projects</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'certification_list' %}">
+          <i class="bi bi-award"></i><span>Certifications</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'award_list' %}">
+          <i class="bi bi-trophy"></i><span>Awards</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'language_list' %}">
+          <i class="bi bi-translate"></i><span>Languages</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'technicalskill_list' %}">
+          <i class="bi bi-code-slash"></i><span>Technical Skills</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'applications:application_list' %}">
+          <i class="bi bi-paperclip"></i><span>Applications</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'jobs:job_list' %}">
+          <i class="bi bi-briefcase"></i><span>Job Listings</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'settings' %}">
+          <i class="bi bi-gear"></i><span>Settings</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>DiamondTalent</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.0/dist/simple-datatables.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@6.7.3/tinymce.min.js"></script>
+
+  <!-- NiceAdmin JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toggle sidebar
+      const toggleSidebarBtn = document.querySelector('.toggle-sidebar-btn');
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('.main');
+
+      if (toggleSidebarBtn) {
+        toggleSidebarBtn.addEventListener('click', function() {
+          sidebar.classList.toggle('collapsed');
+          main.classList.toggle('expanded');
+        });
+      }
+
+      // Back to top button
+      const backtotop = document.querySelector('.back-to-top');
+      if (backtotop) {
+        const toggleBacktotop = () => {
+          if (window.scrollY > 100) {
+            backtotop.classList.add('active');
+          } else {
+            backtotop.classList.remove('active');
+          }
+        }
+        window.addEventListener('load', toggleBacktotop);
+        document.addEventListener('scroll', toggleBacktotop);
+      }
+
+      // Initialize tooltips
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+  </script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html> 

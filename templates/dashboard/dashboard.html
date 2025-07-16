@@ -1,118 +1,123 @@
 {% extends 'resume_base.html' %}
 
 {% block title %}
-Dashboard - DiamondTalent
+Dashboard - Resume Builder
 {% endblock %}
 
 {% block content %}
 <div class="pagetitle">
-  <h1>Dashboard</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-      <li class="breadcrumb-item active">Dashboard</li>
-    </ol>
-  </nav>
+  <h1>Welcome, {{ user.first_name|default:user.username }}!</h1>
+  <p class="lead">Build your professional story with the perfect resume.</p>
 </div>
 
 <section class="section dashboard">
-  <div class="row">
-    <!-- Left side columns -->
-    <div class="col-lg-8">
-      <div class="row">
-        <!-- Resumes Card -->
-        <div class="col-xxl-4 col-md-6">
-          <div class="card info-card sales-card">
-            <div class="card-body">
-              <h5 class="card-title">Resumes <span>| This Month</span></h5>
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <i class="bi bi-file-earmark-text"></i>
-                </div>
-                <div class="ps-3">
-                  <h6>{{ total_resumes }}</h6>
-                  <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="row mb-4">
+    <!-- Stats Cards -->
+    <div class="col-md-3">
+      <div class="card info-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">My Resumes</h6>
+          <div class="display-4 fw-bold">{{ total_resumes }}</div>
+          <a href="{% url 'resume_create' %}" class="btn btn-outline-primary btn-sm mt-2"><i class="bi bi-plus-circle me-1"></i>New Resume</a>
         </div>
-
-        <!-- Applications Card -->
-        <div class="col-xxl-4 col-md-6">
-          <div class="card info-card revenue-card">
-            <div class="card-body">
-              <h5 class="card-title">Applications <span>| This Month</span></h5>
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <i class="bi bi-paperclip"></i>
-                </div>
-                <div class="ps-3">
-                  <h6>{{ total_applications }}</h6>
-                  <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-                </div>
-              </div>
-            </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card info-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Sections Completed</h6>
+          <div class="progress mb-2" style="height: 8px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ section_completion_percent|default:0 }}%" aria-valuenow="{{ section_completion_percent|default:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
+          <span class="fw-bold">{{ sections_completed|default:0 }}/{{ total_sections|default:7 }}</span>
         </div>
-
-        <!-- Job Listings Card -->
-        <div class="col-xxl-4 col-xl-12">
-          <div class="card info-card customers-card">
-            <div class="card-body">
-              <h5 class="card-title">Job Listings <span>| This Year</span></h5>
-              <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                  <i class="bi bi-briefcase"></i>
-                </div>
-                <div class="ps-3">
-                  <h6>{{ total_jobs }}</h6>
-                  <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card info-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Applications Sent</h6>
+          <div class="display-4 fw-bold">{{ total_applications }}</div>
+          <a href="{% url 'applications:application_list' %}" class="btn btn-outline-success btn-sm mt-2">View</a>
         </div>
-
-        <!-- Recent Applications -->
-        <div class="col-12">
-          <div class="card recent-sales overflow-auto">
-            <div class="card-body">
-              <h5 class="card-title">Recent Applications <span>| Today</span></h5>
-              <table class="table table-borderless datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Applicant</th>
-                    <th scope="col">Job Title</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for application in recent_applications %}
-                  <tr>
-                    <th scope="row"><a href="#">{{ application.id }}</a></th>
-                    <td>{{ application.applicant }}</td>
-                    <td><a href="#" class="text-primary">{{ application.job_title }}</a></td>
-                    <td><span class="badge bg-{% if application.status == 'Approved' %}success{% elif application.status == 'Pending' %}warning{% else %}secondary{% endif %}">{{ application.status }}</span></td>
-                    <td>{{ application.date }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card info-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Profile Strength</h6>
+          <div class="circular-progress mx-auto mb-2" style="width: 60px; height: 60px;">
+            <svg width="60" height="60">
+              <circle cx="30" cy="30" r="26" stroke="#e9ecef" stroke-width="6" fill="none"/>
+              <circle cx="30" cy="30" r="26" stroke="#0d6efd" stroke-width="6" fill="none" stroke-dasharray="163.36" stroke-dashoffset="{{ profile_strength_offset }}"/>
+            </svg>
+            <span class="position-absolute top-50 start-50 translate-middle fw-bold">{{ profile_strength|default:0 }}%</span>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Right side columns -->
-    <div class="col-lg-4">
-      <!-- Recent Activity -->
+  <div class="row">
+    <!-- Resume Overview -->
+    <div class="col-lg-8 mb-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+          <h5 class="card-title">My Resumes</h5>
+          {% if user_resumes %}
+          <div class="row">
+            {% for resume in user_resumes %}
+            <div class="col-md-6 mb-3">
+              <div class="card h-100 border-primary">
+                <div class="card-body">
+                  <h6 class="card-title">{{ resume.title }}</h6>
+                  <p class="small text-muted mb-2">Last updated: {{ resume.updated_at|date:'M d, Y' }}</p>
+                  <div class="d-flex gap-2 mb-2">
+                    <a href="{% url 'resume_detail' resume.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-eye"></i> View</a>
+                    <a href="{% url 'resume_update' resume.pk %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil"></i> Edit</a>
+                    <a href="{% url 'resume_download' resume.pk %}" class="btn btn-outline-success btn-sm"><i class="bi bi-download"></i> Download</a>
+                  </div>
+                  <a href="{% url 'resume_delete' resume.pk %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="alert alert-info text-center mb-0">
+            <i class="bi bi-file-earmark-text display-4 text-muted"></i>
+            <p class="mt-2 mb-0">No resumes yet. <a href="{% url 'resume_create' %}">Create your first resume!</a></p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Section Completion Checklist -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Section Completion Checklist</h5>
+          <ul class="list-group list-group-flush">
+            {% for section in resume_sections %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-check-circle{% if not section.completed %}-fill text-muted{% else %} text-success{% endif %} me-2"></i>{{ section.name }}</span>
+              {% if not section.completed %}
+              <a href="{{ section.add_url }}" class="btn btn-outline-primary btn-sm">Add</a>
+              {% else %}
+              <span class="badge bg-success">Done</span>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side: Activity, Quick Actions, Tips -->
+    <div class="col-lg-4">
+      <!-- Recent Activity -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Recent Activity</h5>
           <div class="activity">
             {% for activity in recent_activities %}
             <div class="activity-item d-flex">
@@ -122,29 +127,42 @@ Dashboard - DiamondTalent
                 {{ activity.content }}
               </div>
             </div>
+            {% empty %}
+            <div class="text-muted small">No recent activity.</div>
             {% endfor %}
           </div>
         </div>
       </div>
 
       <!-- Quick Actions -->
-      <div class="card">
+      <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">Quick Actions</h5>
           <div class="d-flex flex-column gap-3">
-            <a href="{% url 'resume_list' %}" class="btn btn-primary">
+            <a href="{% url 'resume_create' %}" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-2"></i>Create Resume
+            </a>
+            <a href="{% url 'resume_list' %}" class="btn btn-secondary">
               <i class="bi bi-file-earmark-text me-2"></i>Manage Resumes
-            </a>
-            <a href="{% url 'applications:application_list' %}" class="btn btn-success">
-              <i class="bi bi-paperclip me-2"></i>View Applications
-            </a>
-            <a href="{% url 'jobs:job_list' %}" class="btn btn-info">
-              <i class="bi bi-briefcase me-2"></i>Browse Jobs
             </a>
             <a href="{% url 'settings' %}" class="btn btn-warning">
               <i class="bi bi-gear me-2"></i>Settings
             </a>
           </div>
+        </div>
+      </div>
+
+      <!-- Tips & Resources -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Resume Tips</h5>
+          <ul class="list-unstyled mb-0">
+            <li><i class="bi bi-lightbulb me-2 text-info"></i>Keep your resume concise and relevant.</li>
+            <li><i class="bi bi-lightbulb me-2 text-info"></i>Highlight achievements, not just duties.</li>
+            <li><i class="bi bi-lightbulb me-2 text-info"></i>Use action verbs and quantify results.</li>
+            <li><i class="bi bi-lightbulb me-2 text-info"></i>Proofread for typos and errors.</li>
+            <li><i class="bi bi-lightbulb me-2 text-info"></i>Customize for each job application.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -155,8 +173,7 @@ Dashboard - DiamondTalent
 {% block extra_scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Initialize charts and other dashboard components
-  console.log("Dashboard loaded successfully!");
+  // Placeholder for dashboard JS (charts, etc.)
 });
 </script>
 {% endblock %}

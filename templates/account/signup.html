@@ -1,203 +1,167 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+{% block title %}Sign Up - DiamondTalent{% endblock %}
 
-    <title>Login - NiceAdmin Bootstrap Template</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
+{% block content %}
+<div class="container">
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-    <!-- Favicons -->
-    <link href="{% static 'img/favicon.png' %}" rel="icon">
-    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+                    <div class="d-flex justify-content-center py-4">
+                        <a href="/" class="logo d-flex align-items-center w-auto">
+                            <img src="{% static 'img/logo1.png' %}" alt="">
+                            <span class="d-none d-lg-block">DiamondTalent</span>
+                        </a>
+                    </div><!-- End Logo -->
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-          rel="stylesheet">
-
-    <!-- Vendor CSS Files -->
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/quill/quill.snow.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/quill/quill.bubble.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
-    <link href="{% static 'vendor/simple-datatables/style.css' %}" rel="stylesheet">
-
-    <!-- Template Main CSS File -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-</head>
-
-<body>
-<main>
-    <div class="container">
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
-                        <div class="d-flex justify-content-center py-4">
-                            <a href="/" class="logo d-flex align-items-center w-auto">
-                                <img src="{% static 'img/logo1.png' %}" alt="">
-                                <span class="d-none d-lg-block">NiceAdmin</span>
-                            </a>
-                        </div><!-- End Logo -->
-
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                                    <p class="text-center small">Enter your credentials to login</p>
-                                </div>
-
-                                {% if form.errors %}
-                                <div class="alert alert-danger">
-                                    Please correct the error{% if form.errors|length > 1 %}s{% endif %} below.
-                                </div>
-                                {% endif %}
-
-                                <form method="post" action="{% url 'account_signup' %}" class="row g-3 needs-validation"
-                                      novalidate>
-                                    {% csrf_token %}
-                                    <div class="col-12">
-                                        <label for="first_name" class="form-label">First Name</label>
-                                        <input type="text" name="first_name" placeholder="First Name" id="first_name"
-                                               value="{{ form.first_name.value|default_if_none:'' }}"
-                                               class="form-control{% if form.first_name.errors %} is-invalid{% endif %}"
-                                               required>
-                                        {% if form.first_name.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.first_name.errors %}
-                                            {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="last_name" class="form-label">Last Name</label>
-                                        <input type="text" name="last_name" placeholder="Last Name"
-                                               id="last_name"
-                                               value="{{ form.last_name.value|default_if_none:'' }}"
-                                               class="form-control{% if form.last_name.errors %} is-invalid{% endif %}"
-                                               required>
-                                        {% if form.last_name.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.last_name.errors %}
-                                            {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="id_email" class="form-label">Your Email</label>
-                                        <input type="email" name="email" autocomplete="email"
-                                               placeholder="Email address"
-                                               maxlength="320" id="id_email"
-                                               value="{{ form.email.value|default_if_none:'' }}"
-                                               class="form-control{% if form.email.errors %} is-invalid{% endif %}"
-                                               required>
-                                        {% if form.email.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.email.errors %}
-                                            {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="id_username" class="form-label">Username</label>
-                                        <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                            <input type="text" name="username" placeholder="Username"
-                                                   autocomplete="username" minlength="1" maxlength="150"
-                                                   id="id_username"
-                                                   value="{{ form.username.value|default_if_none:'' }}"
-                                                   class="form-control{% if form.username.errors %} is-invalid{% endif %}"
-                                                   required>
-                                            {% if form.username.errors %}
-                                            <div class="invalid-feedback">
-                                                {% for error in form.username.errors %}
-                                                {{ error }}
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="id_password1" class="form-label">Password</label>
-                                        <input input type="password" name="password1" placeholder="Password"
-                                               autocomplete="new-password"
-                                               aria-describedby="id_password1_helptext" id="id_password1"
-                                               value="{{ form.password1.value|default_if_none:'' }}"
-                                               class="form-control{% if form.password1.errors %} is-invalid{% endif %}"
-                                               required>
-                                        {% if form.password1.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.password1.errors %}
-                                            {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-12">
-                                        <label for="id_password2" class="form-label">Password (again):</label>
-                                        <input type="password" name="password2" placeholder="Password (again)"
-                                               autocomplete="new-password" id="id_password2"
-                                               value="{{ form.password2.value|default_if_none:'' }}"
-                                               class="form-control{% if form.password2.errors %} is-invalid{% endif %}"
-                                               required>
-                                        {% if form.password2.errors %}
-                                        <div class="invalid-feedback">
-                                            {% for error in form.password2.errors %}
-                                            {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="terms" type="checkbox" value=""
-                                                   id="acceptTerms" required>
-                                            <label class="form-check-label" for="acceptTerms">I agree and accept the <a
-                                                    href="#">terms and conditions</a></label>
-                                            <div class="invalid-feedback">You must agree before submitting.</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Create Account</button>
-                                    </div>
-                                    <div class="col-12">
-                                        <p class="small mb-0">Already have an account? <a href="{% url 'account_login'%}">Log
-                                            in</a></p>
-                                    </div>
-                                </form>
-
-                                <div class="col-12 mt-3">
-                                    <p class="small mb-0">
-                                        <a href="{% url 'account_reset_password' %}">Forgot password?</a>
-                                    </p>
-                                    <p class="small mb-0">
-                                        Don't have an account? <a href="{% url 'account_signup' %}">Create an
-                                        account</a>
-                                    </p>
-                                </div>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="pt-4 pb-2">
+                                <h5 class="card-title text-center pb-0 fs-4">Create Your Account</h5>
+                                <p class="text-center small">Enter your details to create an account</p>
                             </div>
+
+                            {% if form.errors %}
+                            <div class="alert alert-danger">
+                                Please correct the error{% if form.errors|length > 1 %}s{% endif %} below.
+                            </div>
+                            {% endif %}
+
+                            <form method="post" action="{% url 'account_signup' %}" class="row g-3 needs-validation"
+                                  novalidate>
+                                {% csrf_token %}
+                                <div class="col-12">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" name="first_name" placeholder="First Name" id="first_name"
+                                           value="{{ form.first_name.value|default_if_none:'' }}"
+                                           class="form-control{% if form.first_name.errors %} is-invalid{% endif %}"
+                                           required>
+                                    {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.first_name.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <input type="text" name="last_name" placeholder="Last Name"
+                                           id="last_name"
+                                           value="{{ form.last_name.value|default_if_none:'' }}"
+                                           class="form-control{% if form.last_name.errors %} is-invalid{% endif %}"
+                                           required>
+                                    {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.last_name.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="id_email" class="form-label">Your Email</label>
+                                    <input type="email" name="email" autocomplete="email"
+                                           placeholder="Email address"
+                                           maxlength="320" id="id_email"
+                                           value="{{ form.email.value|default_if_none:'' }}"
+                                           class="form-control{% if form.email.errors %} is-invalid{% endif %}"
+                                           required>
+                                    {% if form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.email.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="id_username" class="form-label">Username</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                        <input type="text" name="username" placeholder="Username"
+                                               autocomplete="username" minlength="1" maxlength="150"
+                                               id="id_username"
+                                               value="{{ form.username.value|default_if_none:'' }}"
+                                               class="form-control{% if form.username.errors %} is-invalid{% endif %}"
+                                               required>
+                                        {% if form.username.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.username.errors %}
+                                            {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="id_password1" class="form-label">Password</label>
+                                    <input type="password" name="password1" placeholder="Password"
+                                           autocomplete="new-password"
+                                           aria-describedby="id_password1_helptext" id="id_password1"
+                                           value="{{ form.password1.value|default_if_none:'' }}"
+                                           class="form-control{% if form.password1.errors %} is-invalid{% endif %}"
+                                           required>
+                                    {% if form.password1.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.password1.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <label for="id_password2" class="form-label">Password (again):</label>
+                                    <input type="password" name="password2" placeholder="Password (again)"
+                                           autocomplete="new-password" id="id_password2"
+                                           value="{{ form.password2.value|default_if_none:'' }}"
+                                           class="form-control{% if form.password2.errors %} is-invalid{% endif %}"
+                                           required>
+                                    {% if form.password2.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.password2.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="terms" type="checkbox" value=""
+                                               id="acceptTerms" required>
+                                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a
+                                                href="#">terms and conditions</a></label>
+                                        <div class="invalid-feedback">You must agree before submitting.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                                </div>
+                                <div class="col-12">
+                                    <p class="small mb-0">Already have an account? <a href="{% url 'account_login'%}">Log
+                                        in</a></p>
+                                </div>
+                            </form>
                         </div>
-
-                        
-
                     </div>
+
+                    <div class="credits">
+                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                    </div>
+
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
+</div>
+{% endblock %}
     </div>
 </main><!-- End #main -->
 
