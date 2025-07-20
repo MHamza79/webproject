@@ -17,14 +17,18 @@
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.resume.id_for_label }}" class="form-label">Resume *</label>
+                                <label for="{{ form.resume.id_for_label }}" class="form-label">Resume *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Select the resume this work experience belongs to."></i>
+                                </label>
                                 {{ form.resume }}
                                 {% if form.resume.errors %}
                                     <div class="invalid-feedback d-block">{{ form.resume.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label for="{{ form.job_title.id_for_label }}" class="form-label">Job Title *</label>
+                                <label for="{{ form.job_title.id_for_label }}" class="form-label">Job Title *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Enter your job title, e.g., 'Software Engineer'."></i>
+                                </label>
                                 {{ form.job_title }}
                                 {% if form.job_title.errors %}
                                     <div class="invalid-feedback d-block">{{ form.job_title.errors.0 }}</div>
@@ -34,14 +38,18 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.company.id_for_label }}" class="form-label">Company *</label>
+                                <label for="{{ form.company.id_for_label }}" class="form-label">Company *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Name of the company where you worked."></i>
+                                </label>
                                 {{ form.company }}
                                 {% if form.company.errors %}
                                     <div class="invalid-feedback d-block">{{ form.company.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
+                                <label for="{{ form.location.id_for_label }}" class="form-label">Location
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Location of the company (city, country)."></i>
+                                </label>
                                 {{ form.location }}
                                 {% if form.location.errors %}
                                     <div class="invalid-feedback d-block">{{ form.location.errors.0 }}</div>
@@ -51,14 +59,18 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date *</label>
+                                <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="When you started this job."></i>
+                                </label>
                                 {{ form.start_date }}
                                 {% if form.start_date.errors %}
                                     <div class="invalid-feedback d-block">{{ form.start_date.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label for="{{ form.end_date.id_for_label }}" class="form-label">End Date</label>
+                                <label for="{{ form.end_date.id_for_label }}" class="form-label">End Date
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="When you left this job (leave empty if current)."></i>
+                                </label>
                                 {{ form.end_date }}
                                 {% if form.end_date.errors %}
                                     <div class="invalid-feedback d-block">{{ form.end_date.errors.0 }}</div>
@@ -80,7 +92,9 @@
 
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label for="{{ form.description.id_for_label }}" class="form-label">Job Description</label>
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Job Description
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Describe your responsibilities and tasks in this job."></i>
+                                </label>
                                 {{ form.description }}
                                 {% if form.description.errors %}
                                     <div class="invalid-feedback d-block">{{ form.description.errors.0 }}</div>
@@ -90,7 +104,9 @@
 
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label for="{{ form.achievements.id_for_label }}" class="form-label">Key Achievements</label>
+                                <label for="{{ form.achievements.id_for_label }}" class="form-label">Key Achievements
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="List your main achievements in this role (one per line)."></i>
+                                </label>
                                 {{ form.achievements }}
                                 {% if form.achievements.errors %}
                                     <div class="invalid-feedback d-block">{{ form.achievements.errors.0 }}</div>
@@ -101,7 +117,9 @@
 
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label for="{{ form.technologies.id_for_label }}" class="form-label">Technologies Used</label>
+                                <label for="{{ form.technologies.id_for_label }}" class="form-label">Technologies Used
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Select technologies you used in this job."></i>
+                                </label>
                                 {{ form.technologies }}
                                 {% if form.technologies.errors %}
                                     <div class="invalid-feedback d-block">{{ form.technologies.errors.0 }}</div>

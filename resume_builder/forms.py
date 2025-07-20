@@ -51,46 +51,43 @@ class ResumeTemplateForm(forms.ModelForm):
 class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
-        fields = ['title', 'slug', 'summary', 'tags', 'template', 'language', 'visibility']
+        fields = ['title', 'slug', 'summary', 'tags', 'template', 'visibility']  # Removed 'language'
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'slug': forms.TextInput(attrs={'class': 'form-control'}),
             'summary': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter tags separated by commas'}),
             'template': forms.Select(attrs={'class': 'form-select'}),
-            'language': forms.Select(attrs={'class': 'form-select'}),
             'visibility': forms.Select(attrs={'class': 'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        # Convert tags list to comma-separated string for display
+        # Tags
         if self.instance and self.instance.pk and self.instance.tags:
             if isinstance(self.instance.tags, list):
                 self.initial['tags'] = ', '.join(self.instance.tags)
-        # Provide language choices if not set
-        self.fields['language'].choices = [
-            ('en', 'English'),
-            ('es', 'Spanish'),
-            ('fr', 'French'),
-            ('de', 'German'),
-            ('zh', 'Chinese'),
-            ('ar', 'Arabic'),
-            ('ru', 'Russian'),
-            ('hi', 'Hindi'),
-            ('pt', 'Portuguese'),
-            ('ja', 'Japanese'),
-            ('ko', 'Korean'),
-            ('it', 'Italian'),
-            ('tr', 'Turkish'),
-            ('nl', 'Dutch'),
-            ('pl', 'Polish'),
-            ('sv', 'Swedish'),
-            ('no', 'Norwegian'),
-            ('da', 'Danish'),
-            ('fi', 'Finnish'),
-            ('el', 'Greek'),
+        # Template choices
+        template_qs = ResumeTemplate.objects.all()
+        if template_qs.exists():
+            self.fields['template'].queryset = template_qs
+            self.fields['template'].empty_label = "Select template"
+            self.fields['template'].required = True
+            self.fields['template'].widget.attrs.pop('disabled', None)
+        else:
+            self.fields['template'].queryset = template_qs
+            self.fields['template'].empty_label = "No templates available - Contact admin"
+            self.fields['template'].required = False
+            self.fields['template'].widget.attrs['disabled'] = 'disabled'
+        # Visibility choices
+        visibility_choices = [
+            ('', 'Select visibility'),
+            ('PRIVATE', 'Private'),
+            ('PUBLIC', 'Public'),
+            ('SHARED', 'Shared with Link'),
         ]
+        self.fields['visibility'].choices = visibility_choices
 
 class ResumeSectionForm(forms.ModelForm):
     class Meta:

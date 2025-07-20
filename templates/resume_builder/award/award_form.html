@@ -28,7 +28,9 @@
         {% csrf_token %}
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.resume.label }}</label>
+            <label class="form-label">{{ form.resume.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Select the resume this award is associated with."></i>
+            </label>
             {{ form.resume|add_class:"form-control" }}
             {% if form.resume.help_text %}
               <small class="form-text text-muted">{{ form.resume.help_text }}</small>
@@ -38,7 +40,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.title.label }}</label>
+            <label class="form-label">{{ form.title.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Enter the award title, e.g., 'Best Student Award'."></i>
+            </label>
             {{ form.title|add_class:"form-control" }}
             {% if form.title.help_text %}
               <small class="form-text text-muted">{{ form.title.help_text }}</small>
@@ -48,7 +52,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.issuer.label }}</label>
+            <label class="form-label">{{ form.issuer.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Organization or person who issued the award."></i>
+            </label>
             {{ form.issuer|add_class:"form-control" }}
             {% if form.issuer.help_text %}
               <small class="form-text text-muted">{{ form.issuer.help_text }}</small>
@@ -58,7 +64,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.category.label }}</label>
+            <label class="form-label">{{ form.category.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Type or category of the award."></i>
+            </label>
             {{ form.category|add_class:"form-control" }}
             {% if form.category.help_text %}
               <small class="form-text text-muted">{{ form.category.help_text }}</small>
@@ -68,7 +76,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.issue_date.label }}</label>
+            <label class="form-label">{{ form.issue_date.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Date the award was received."></i>
+            </label>
             {{ form.issue_date|add_class:"form-control"|attr:"type:date" }}
             {% if form.issue_date.help_text %}
               <small class="form-text text-muted">{{ form.issue_date.help_text }}</small>
@@ -116,4 +126,13 @@
     </div>
   </div>
 </section>
-{% endblock %} 
+{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+});
+</script> 

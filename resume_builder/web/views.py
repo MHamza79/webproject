@@ -2,13 +2,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.contrib import messages
 import os
+import re
+
 from resume_builder.models import WorkExperience, Education, Project, Certification, Award, Language, Resume, TechnicalSkill
 from resume_builder.forms import WorkExperienceForm, EducationForm, ProjectForm, CertificationForm, AwardForm, LanguageForm, TechnicalSkillForm, ResumeTemplateSelectionForm, ResumeForm
+from resume_builder.utils import generate_resume_pdf, get_safe_filename
+from resume_builder.services import ResumeAnalyzer, ResumeEnhancer
 
 class WorkExperienceListView(LoginRequiredMixin, ListView):
     model = WorkExperience
@@ -418,9 +423,13 @@ class ResumeCreateView(LoginRequiredMixin, CreateView):
     template_name = 'resume_builder/resume_form.html'
     success_url = reverse_lazy('resume_list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.user = self.request.user
-        
         # Handle tags field - convert comma-separated string to list
         if 'tags' in form.cleaned_data and form.cleaned_data['tags']:
             tags_text = form.cleaned_data['tags']
@@ -428,7 +437,6 @@ class ResumeCreateView(LoginRequiredMixin, CreateView):
                 # Convert comma-separated string to list
                 tags_list = [tag.strip() for tag in tags_text.split(',') if tag.strip()]
                 form.instance.tags = tags_list
-        
         return super().form_valid(form)
 
 class ResumeDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -457,6 +465,11 @@ class ResumeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'resume_builder/resume_form.html'
     success_url = reverse_lazy('resume_list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def test_func(self):
         return self.get_object().user == self.request.user
 
@@ -468,7 +481,6 @@ class ResumeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 # Convert comma-separated string to list
                 tags_list = [tag.strip() for tag in tags_text.split(',') if tag.strip()]
                 form.instance.tags = tags_list
-        
         return super().form_valid(form)
 
 class ResumeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -488,20 +500,23 @@ class ResumeDownloadView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         resume = self.get_object()
-        html_content = render_to_string(self.template_name, {
-            'resume': resume,
-            'work_experiences': resume.work_experiences.all(),
-            'educations': resume.educations.all(),
-            'projects': resume.projects.all(),
-            'certifications': resume.certifications.all(),
-            'awards': resume.awards.all(),
-            'languages': resume.languages.all(),
-            'technical_skills': resume.technical_skills.all(),
-        })
         
-        response = HttpResponse(html_content, content_type='text/html')
-        response['Content-Disposition'] = f'attachment; filename="{resume.title}.html"'
-        return response
+        try:
+            # Generate PDF using utility function
+            pdf_content = generate_resume_pdf(resume)
+            
+            # Create safe filename
+            safe_filename = get_safe_filename(resume.title)
+            
+            # Create response with PDF content
+            response = HttpResponse(pdf_content, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{safe_filename}.pdf"'
+            return response
+            
+        except Exception as e:
+            # Log the error and return a user-friendly message
+            messages.error(request, f"Error generating PDF: {str(e)}")
+            return redirect('resume_detail', pk=resume.pk)
 
 class ResumeTemplateSelectionView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Resume
@@ -511,3 +526,126 @@ class ResumeTemplateSelectionView(LoginRequiredMixin, UserPassesTestMixin, Updat
 
     def test_func(self):
         return self.get_object().user == self.request.user
+
+class ResumeAnalysisView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """AI-powered resume analysis and improvement suggestions"""
+    model = Resume
+    template_name = 'resume_builder/resume_analysis.html'
+    
+    def test_func(self):
+        return self.get_object().user == self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resume = self.get_object()
+        
+        # Initialize analyzer
+        analyzer = ResumeAnalyzer(resume)
+        enhancer = ResumeEnhancer()
+        
+        # Get analysis results
+        context['ats_score'] = analyzer.analyze_ats_score()
+        context['suggestions'] = analyzer.get_improvement_suggestions()
+        context['improvement_suggestions'] = analyzer.get_improvement_suggestions()
+        context['completion_percentage'] = resume.get_completion_percentage()
+        context['ats_analysis'] = enhancer.optimize_for_ats(resume)
+        
+        # Get keyword suggestions
+        context['keywords'] = analyzer.suggest_keywords()
+        context['keyword_suggestions'] = analyzer.suggest_keywords()
+        
+        # Get action verb suggestions
+        context['action_verbs'] = analyzer.ACTION_VERBS[:10]
+        
+        # Resume statistics
+        context['stats'] = {
+            'total_words': len(analyzer.content.split()),
+            'action_verbs_used': sum(1 for verb in analyzer.ACTION_VERBS if verb in analyzer.content),
+            'numbers_used': len(re.findall(r'\d+', analyzer.content)),
+            'sections_completed': sum([
+                bool(resume.summary),
+                resume.work_experiences.exists(),
+                resume.educations.exists(),
+                resume.technical_skills.exists(),
+                resume.projects.exists(),
+                resume.certifications.exists(),
+                resume.awards.exists(),
+                resume.languages.exists(),
+            ])
+        }
+        
+        # Calculate progress offset for circular progress bar
+        # Formula: (100 - ats_score) * 3.14 to create the offset
+        context['progress_offset'] = (100 - context['ats_score']) * 3.14
+        
+        return context
+
+class CoverLetterGeneratorView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """Generate cover letters based on resume"""
+    model = Resume
+    template_name = 'resume_builder/cover_letter_generator.html'
+    
+    def test_func(self):
+        return self.get_object().user == self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resume = self.get_object()
+        analyzer = ResumeAnalyzer(resume)
+        
+        # Get job details from request
+        job_title = self.request.GET.get('job_title', 'Software Engineer')
+        company = self.request.GET.get('company', 'Tech Company')
+        
+        # Generate cover letter
+        context['cover_letter'] = analyzer.generate_cover_letter_content(job_title, company)
+        context['job_title'] = job_title
+        context['company'] = company
+        
+        return context
+
+class ResumeVariationsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """Generate different resume variations for different job applications"""
+    model = Resume
+    template_name = 'resume_builder/resume_variations.html'
+    
+    def test_func(self):
+        return self.get_object().user == self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resume = self.get_object()
+        enhancer = ResumeEnhancer()
+        
+        # Get job title from request
+        job_title = self.request.GET.get('job_title', 'Software Engineer')
+        
+        # Generate variations
+        context['variations'] = enhancer.generate_resume_variations(resume, job_title)
+        context['job_title'] = job_title
+        
+        return context
+
+class BulletPointGeneratorView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    """Generate AI-powered bullet point suggestions"""
+    model = Resume
+    template_name = 'resume_builder/bullet_point_generator.html'
+    
+    def test_func(self):
+        return self.get_object().user == self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resume = self.get_object()
+        analyzer = ResumeAnalyzer(resume)
+        
+        # Get job details from request
+        job_title = self.request.GET.get('job_title', 'Software Engineer')
+        company = self.request.GET.get('company', 'Tech Company')
+        
+        # Generate bullet point suggestions
+        context['bullet_suggestions'] = analyzer.suggest_bullet_points(job_title, company)
+        context['job_title'] = job_title
+        context['company'] = company
+        
+        return context

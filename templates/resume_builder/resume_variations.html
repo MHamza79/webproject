@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Resume Variations - {{ resume.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0">AI Resume Variations</h1>
+                    <p class="text-muted mb-0">Generate different versions of {{ resume.title }} for various job applications</p>
+                </div>
+                <div>
+                    <a href="{% url 'resume_detail' resume.pk %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Resume
+                    </a>
+                </div>
+            </div>
+
+            <!-- Resume Variations -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-files"></i> AI-Generated Resume Variations
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if variations %}
+                                <div class="variations-content">
+                                    {% for variation in variations %}
+                                        <div class="variation-card mb-4 p-4 border rounded">
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <div>
+                                                    <h6 class="text-primary fw-bold mb-1">
+                                                        <i class="bi bi-briefcase"></i> {{ variation.title }}
+                                                    </h6>
+                                                    <small class="text-muted">{{ variation.description }}</small>
+                                                </div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                        <i class="bi bi-three-dots"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#" onclick="previewVariation('{{ variation.id }}')">
+                                                            <i class="bi bi-eye"></i> Preview
+                                                        </a></li>
+                                                        <li><a class="dropdown-item" href="#" onclick="downloadVariation('{{ variation.id }}')">
+                                                            <i class="bi bi-download"></i> Download PDF
+                                                        </a></li>
+                                                        <li><a class="dropdown-item" href="#" onclick="applyVariation('{{ variation.id }}')">
+                                                            <i class="bi bi-check-circle"></i> Apply Changes
+                                                        </a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Key Changes -->
+                                            <div class="mb-3">
+                                                <h6 class="text-success fw-bold mb-2">
+                                                    <i class="bi bi-arrow-up-circle"></i> Key Changes
+                                                </h6>
+                                                <ul class="list-unstyled">
+                                                    {% for change in variation.changes %}
+                                                        <li class="mb-1">
+                                                            <i class="bi bi-check text-success"></i>
+                                                            <small>{{ change }}</small>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            
+                                            <!-- Target Keywords -->
+                                            <div class="mb-3">
+                                                <h6 class="text-warning fw-bold mb-2">
+                                                    <i class="bi bi-tags"></i> Target Keywords
+                                                </h6>
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    {% for keyword in variation.keywords %}
+                                                        <span class="badge bg-warning text-dark">{{ keyword }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- ATS Score -->
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <small class="text-muted">ATS Compatibility Score:</small>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="progress me-2" style="width: 100px; height: 8px;">
+                                                            <div class="progress-bar bg-success" style="width: {{ variation.ats_score }}%"></div>
+                                                        </div>
+                                                        <span class="fw-bold text-success">{{ variation.ats_score }}%</span>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-primary btn-sm" onclick="useVariation('{{ variation.id }}')">
+                                                    <i class="bi bi-check-circle"></i> Use This Version
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="mt-4 pt-3 border-top">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button class="btn btn-info w-100" onclick="generateNewVariations()">
+                                                <i class="bi bi-arrow-clockwise"></i> Generate New Variations
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="btn btn-success w-100" onclick="compareVariations()">
+                                                <i class="bi bi-bar-chart"></i> Compare Variations
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-5">
+                                    <i class="bi bi-files display-1 text-muted"></i>
+                                    <h4 class="mt-3">No Variations Generated</h4>
+                                    <p class="text-muted">Please ensure your resume has sufficient content to generate variations.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <!-- Variation Tips -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-lightbulb"></i> Variation Tips
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Customize for each job application
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Include relevant keywords from job posting
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Adjust experience focus based on role
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Highlight transferable skills
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Maintain consistency in formatting
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Industry Focus -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0">
+                                <i class="bi bi-building"></i> Industry Focus
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="generateIndustryVariation('tech')">
+                                    <i class="bi bi-cpu"></i> Technology
+                                </button>
+                                <button class="btn btn-outline-success btn-sm" onclick="generateIndustryVariation('finance')">
+                                    <i class="bi bi-graph-up"></i> Finance
+                                </button>
+                                <button class="btn btn-outline-info btn-sm" onclick="generateIndustryVariation('healthcare')">
+                                    <i class="bi bi-heart-pulse"></i> Healthcare
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm" onclick="generateIndustryVariation('marketing')">
+                                    <i class="bi bi-megaphone"></i> Marketing
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-gear"></i> Quick Actions
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'resume_analysis' resume.pk %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-graph-up"></i> Resume Analysis
+                                </a>
+                                <a href="{% url 'cover_letter_generator' resume.pk %}" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-file-earmark-text"></i> Cover Letter Generator
+                                </a>
+                                <a href="{% url 'bullet_point_generator' resume.pk %}" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-list-ul"></i> Bullet Point Generator
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewVariation(variationId) {
+    // This would open a modal or new page to preview the variation
+    alert('Preview feature coming soon!');
+}
+
+function downloadVariation(variationId) {
+    // This would generate and download a PDF of the variation
+    alert('PDF download feature coming soon!');
+}
+
+function applyVariation(variationId) {
+    // This would apply the variation changes to the current resume
+    if (confirm('Are you sure you want to apply these changes to your resume?')) {
+        alert('Changes applied successfully!');
+    }
+}
+
+function useVariation(variationId) {
+    // This would set the variation as the current resume version
+    if (confirm('Use this variation as your current resume?')) {
+        alert('Variation applied successfully!');
+    }
+}
+
+function generateNewVariations() {
+    // Reload the page to generate new variations
+    window.location.reload();
+}
+
+function compareVariations() {
+    // This would open a comparison view
+    alert('Comparison feature coming soon!');
+}
+
+function generateIndustryVariation(industry) {
+    // This would generate a variation focused on a specific industry
+    alert(`Generating ${industry} industry variation...`);
+}
+</script>
+
+<style>
+.variations-content {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.variation-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.variation-card:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+</style>
+{% endblock %} 

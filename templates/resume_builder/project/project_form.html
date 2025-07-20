@@ -28,7 +28,9 @@
         {% csrf_token %}
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.resume.label }}</label>
+            <label class="form-label">{{ form.resume.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Select the resume this project belongs to."></i>
+            </label>
             {{ form.resume|add_class:"form-control" }}
             {% if form.resume.help_text %}
               <small class="form-text text-muted">{{ form.resume.help_text }}</small>
@@ -38,7 +40,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.title.label }}</label>
+            <label class="form-label">{{ form.title.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Enter the project title, e.g., 'E-commerce Website'."></i>
+            </label>
             {{ form.title|add_class:"form-control" }}
             {% if form.title.help_text %}
               <small class="form-text text-muted">{{ form.title.help_text }}</small>
@@ -48,7 +52,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.role.label }}</label>
+            <label class="form-label">{{ form.role.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Your role in the project, e.g., 'Frontend Developer'."></i>
+            </label>
             {{ form.role|add_class:"form-control" }}
             {% if form.role.help_text %}
               <small class="form-text text-muted">{{ form.role.help_text }}</small>
@@ -58,7 +64,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.url.label }}</label>
+            <label class="form-label">{{ form.url.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="(Optional) Link to the project or repository."></i>
+            </label>
             {{ form.url|add_class:"form-control" }}
             {% if form.url.help_text %}
               <small class="form-text text-muted">{{ form.url.help_text }}</small>
@@ -68,7 +76,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.start_date.label }}</label>
+            <label class="form-label">{{ form.start_date.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Project start date."></i>
+            </label>
             {{ form.start_date|add_class:"form-control"|attr:"type:date" }}
             {% if form.start_date.help_text %}
               <small class="form-text text-muted">{{ form.start_date.help_text }}</small>
@@ -78,7 +88,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.end_date.label }}</label>
+            <label class="form-label">{{ form.end_date.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Project end date (leave empty if ongoing)."></i>
+            </label>
             {{ form.end_date|add_class:"form-control"|attr:"type:date" }}
             {% if form.end_date.help_text %}
               <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
@@ -100,7 +112,9 @@
             {% endfor %}
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">{{ form.technologies.label }}</label>
+            <label class="form-label">{{ form.technologies.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Select technologies used in this project."></i>
+            </label>
             {{ form.technologies|add_class:"form-control" }}
             {% if form.technologies.help_text %}
               <small class="form-text text-muted">{{ form.technologies.help_text }}</small>
@@ -110,7 +124,9 @@
             {% endfor %}
           </div>
           <div class="col-12 mb-3">
-            <label class="form-label">{{ form.description.label }}</label>
+            <label class="form-label">{{ form.description.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Describe the project and your contributions."></i>
+            </label>
             {{ form.description|add_class:"form-control"|attr:"rows:4" }}
             {% if form.description.help_text %}
               <small class="form-text text-muted">{{ form.description.help_text }}</small>
@@ -120,7 +136,9 @@
             {% endfor %}
           </div>
           <div class="col-12 mb-3">
-            <label class="form-label">{{ form.outcomes.label }}</label>
+            <label class="form-label">{{ form.outcomes.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Key outcomes or results of the project."></i>
+            </label>
             {{ form.outcomes|add_class:"form-control"|attr:"rows:3" }}
             {% if form.outcomes.help_text %}
               <small class="form-text text-muted">{{ form.outcomes.help_text }}</small>
@@ -136,4 +154,13 @@
     </div>
   </div>
 </section>
-{% endblock %} 
+{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+});
+</script> 

@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Cover Letter Generator - {{ resume.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0">AI Cover Letter Generator</h1>
+                    <p class="text-muted mb-0">Generate professional cover letters for {{ resume.title }}</p>
+                </div>
+                <div>
+                    <a href="{% url 'resume_detail' resume.pk %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Resume
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cover Letter Content -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-file-earmark-text"></i> Generated Cover Letter
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if cover_letter %}
+                                <div class="cover-letter-content">
+                                    {{ cover_letter|linebreaks }}
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="mt-4 pt-3 border-top">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button class="btn btn-primary w-100" onclick="copyToClipboard()">
+                                                <i class="bi bi-clipboard"></i> Copy to Clipboard
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="btn btn-success w-100" onclick="downloadCoverLetter()">
+                                                <i class="bi bi-download"></i> Download as PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-5">
+                                    <i class="bi bi-file-earmark-text display-1 text-muted"></i>
+                                    <h4 class="mt-3">No Cover Letter Generated</h4>
+                                    <p class="text-muted">Please ensure your resume has sufficient content to generate a cover letter.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <!-- Cover Letter Tips -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-lightbulb"></i> Cover Letter Tips
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Keep it concise (3-4 paragraphs)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Address the hiring manager directly
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Highlight relevant achievements
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Show enthusiasm for the role
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Include a call to action
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-gear"></i> Quick Actions
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'resume_analysis' resume.pk %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-graph-up"></i> Resume Analysis
+                                </a>
+                                <a href="{% url 'bullet_point_generator' resume.pk %}" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-list-ul"></i> Bullet Point Generator
+                                </a>
+                                <a href="{% url 'resume_variations' resume.pk %}" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-files"></i> Resume Variations
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard() {
+    const content = document.querySelector('.cover-letter-content').innerText;
+    navigator.clipboard.writeText(content).then(function() {
+        // Show success message
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-primary');
+        }, 2000);
+    });
+}
+
+function downloadCoverLetter() {
+    // This would typically generate a PDF
+    alert('PDF download feature coming soon!');
+}
+</script>
+
+<style>
+.cover-letter-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.cover-letter-content p {
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %} 

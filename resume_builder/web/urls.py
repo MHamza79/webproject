@@ -17,7 +17,8 @@ from .views import (
     TechnicalSkillDeleteView, TechnicalSkillDetailView,
     ResumeTemplateSelectionView,
     ResumeListView, ResumeCreateView, ResumeDetailView, ResumeUpdateView, 
-    ResumeDeleteView, ResumeDownloadView
+    ResumeDeleteView, ResumeDownloadView, ResumeAnalysisView, CoverLetterGeneratorView, 
+    ResumeVariationsView, BulletPointGeneratorView
 )
 
 urlpatterns = [
@@ -29,6 +30,10 @@ urlpatterns = [
     path('resume/<int:pk>/delete/', ResumeDeleteView.as_view(), name='resume_delete'),
     path('resume/<int:pk>/download/', ResumeDownloadView.as_view(), name='resume_download'),
     path('resume/<int:pk>/select-template/', ResumeTemplateSelectionView.as_view(), name='resume_template_selection'),
+    path('resume/<int:pk>/analyze/', ResumeAnalysisView.as_view(), name='resume_analysis'),
+    path('resume/<int:pk>/cover-letter/', CoverLetterGeneratorView.as_view(), name='cover_letter_generator'),
+    path('resume/<int:pk>/variations/', ResumeVariationsView.as_view(), name='resume_variations'),
+    path('resume/<int:pk>/bullet-points/', BulletPointGeneratorView.as_view(), name='bullet_point_generator'),
     
     # Work Experience URLs
     path('work-experience/', WorkExperienceListView.as_view(), name='work_experience_list'),

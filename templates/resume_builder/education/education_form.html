@@ -13,14 +13,18 @@
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.resume.id_for_label }}" class="form-label">Resume *</label>
+                                <label for="{{ form.resume.id_for_label }}" class="form-label">Resume *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Select the resume this education entry belongs to."></i>
+                                </label>
                                 {{ form.resume }}
                                 {% if form.resume.errors %}
                                     <div class="invalid-feedback d-block">{{ form.resume.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label for="{{ form.degree.id_for_label }}" class="form-label">Degree *</label>
+                                <label for="{{ form.degree.id_for_label }}" class="form-label">Degree *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Enter your degree, e.g., 'B.Sc. Computer Science'."></i>
+                                </label>
                                 {{ form.degree }}
                                 {% if form.degree.errors %}
                                     <div class="invalid-feedback d-block">{{ form.degree.errors.0 }}</div>
@@ -30,14 +34,18 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.institution.id_for_label }}" class="form-label">Institution *</label>
+                                <label for="{{ form.institution.id_for_label }}" class="form-label">Institution *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Name of the educational institution."></i>
+                                </label>
                                 {{ form.institution }}
                                 {% if form.institution.errors %}
                                     <div class="invalid-feedback d-block">{{ form.institution.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
+                                <label for="{{ form.location.id_for_label }}" class="form-label">Location
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Location of the institution (city, country)."></i>
+                                </label>
                                 {{ form.location }}
                                 {% if form.location.errors %}
                                     <div class="invalid-feedback d-block">{{ form.location.errors.0 }}</div>
@@ -47,14 +55,18 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date *</label>
+                                <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="When you started this education."></i>
+                                </label>
                                 {{ form.start_date }}
                                 {% if form.start_date.errors %}
                                     <div class="invalid-feedback d-block">{{ form.start_date.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
-                                <label for="{{ form.end_date.id_for_label }}" class="form-label">End Date *</label>
+                                <label for="{{ form.end_date.id_for_label }}" class="form-label">End Date *
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="When you completed or expect to complete this education."></i>
+                                </label>
                                 {{ form.end_date }}
                                 {% if form.end_date.errors %}
                                     <div class="invalid-feedback d-block">{{ form.end_date.errors.0 }}</div>
@@ -64,7 +76,9 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="{{ form.gpa.id_for_label }}" class="form-label">GPA</label>
+                                <label for="{{ form.gpa.id_for_label }}" class="form-label">GPA
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Your Grade Point Average (scale: 0.0 - 4.0)."></i>
+                                </label>
                                 {{ form.gpa }}
                                 {% if form.gpa.errors %}
                                     <div class="invalid-feedback d-block">{{ form.gpa.errors.0 }}</div>
@@ -83,7 +97,9 @@
 
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Description
+                                    <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Additional details about your education, achievements, or relevant coursework."></i>
+                                </label>
                                 {{ form.description }}
                                 {% if form.description.errors %}
                                     <div class="invalid-feedback d-block">{{ form.description.errors.0 }}</div>
@@ -136,6 +152,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 });
 </script>
 {% endblock %} 

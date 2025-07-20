@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.contrib.auth import get_user_model
 
 # Try to import GinIndex for PostgreSQL, fallback for other databases
 try:
@@ -42,22 +43,41 @@ class ResumeTemplate(models.Model):
 
 class Resume(models.Model):
     """Central resume model with slug, tags, language and visibility"""
+    TEMPLATE_CHOICES = [
+        ('modern', 'Modern'),
+        ('classic', 'Classic'),
+        ('creative', 'Creative'),
+        ('minimalist', 'Minimalist'),
+        ('professional', 'Professional'),
+        ('tech', 'Technology'),
+        ('finance', 'Finance'),
+        ('healthcare', 'Healthcare'),
+    ]
+
+    COLOR_SCHEME_CHOICES = [
+        ('blue', 'Professional Blue'),
+        ('green', 'Success Green'),
+        ('purple', 'Creative Purple'),
+        ('red', 'Bold Red'),
+        ('gray', 'Classic Gray'),
+        ('navy', 'Navy Blue'),
+        ('teal', 'Modern Teal'),
+        ('custom', 'Custom'),
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='resumes',
         db_index=True
     )
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=300, unique=True)
     summary = models.TextField(blank=True)
     tags = models.JSONField(default=list, blank=True)
-    template = models.ForeignKey(
-        ResumeTemplate,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='resumes'
-    )
+    template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, default='modern')
+    color_scheme = models.CharField(max_length=20, choices=COLOR_SCHEME_CHOICES, default='blue')
+    custom_colors = models.JSONField(default=dict, blank=True)  # For custom color schemes
     language = models.CharField(max_length=7, default='en')
     visibility = models.CharField(
         max_length=20,
@@ -66,6 +86,16 @@ class Resume(models.Model):
     )
     last_modified = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    version = models.IntegerField(default=1)
+    is_public = models.BooleanField(default=False)
+    view_count = models.IntegerField(default=0)
+    download_count = models.IntegerField(default=0)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+    # AI Analysis fields
+    ats_score = models.IntegerField(null=True, blank=True)
+    ai_suggestions = models.JSONField(default=list, blank=True)
+    keywords_matched = models.JSONField(default=list, blank=True)
 
     class Meta:
         unique_together = ('user', 'title')
@@ -77,6 +107,31 @@ class Resume(models.Model):
 
     def __str__(self):
         return f"{self.user.email} – {self.title}"
+
+    def get_completion_percentage(self):
+        """Calculate resume completion percentage"""
+        sections = [
+            self.summary,
+            self.work_experiences.exists(),
+            self.educations.exists(),
+            self.technical_skills.exists(),
+            self.projects.exists(),
+            self.certifications.exists(),
+            self.awards.exists(),
+            self.languages.exists(),
+        ]
+        completed = sum(1 for section in sections if section)
+        return int((completed / len(sections)) * 100)
+
+    def increment_view_count(self):
+        """Increment view count"""
+        self.view_count += 1
+        self.save(update_fields=['view_count'])
+
+    def increment_download_count(self):
+        """Increment download count"""
+        self.download_count += 1
+        self.save(update_fields=['download_count'])
 
 
 class ResumeSection(models.Model):

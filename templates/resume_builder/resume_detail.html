@@ -1,8 +1,8 @@
-{% extends 'resume_base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}
-{{ resume.title }} - Resume Builder
+{{ resume.title }} - ResumeBuilder Pro
 {% endblock %}
 
 {% block content %}
@@ -23,8 +23,14 @@
       <div class="card mb-4">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="card-title mb-0">Resume Preview</h5>
+            <div>
+              <h5 class="card-title mb-1">Resume Preview</h5>
+              <p class="text-muted mb-0">Preview your professional resume</p>
+            </div>
             <div class="btn-group" role="group">
+              <a href="{% url 'resume_analysis' resume.pk %}" class="btn btn-info">
+                <i class="bi bi-graph-up me-2"></i>AI Analysis
+              </a>
               <a href="{% url 'resume_download' resume.pk %}" class="btn btn-success">
                 <i class="bi bi-download me-2"></i>Download PDF
               </a>
@@ -36,38 +42,46 @@
               </a>
             </div>
           </div>
-          <div class="mb-4">
-            <h2 class="fw-bold">{{ resume.title }}</h2>
-            {% if resume.summary %}
-              <p class="lead">{{ resume.summary }}</p>
-            {% endif %}
-            <div class="mb-2">
-              <span class="badge bg-info me-2">
-                {% if resume.template %}{{ resume.template.name }}{% else %}No Template{% endif %}
-              </span>
-              <span class="badge bg-light text-dark me-2">{{ resume.language|upper }}</span>
+
+          <!-- Resume Header -->
+          <div class="resume-header mb-4 p-4 bg-light rounded">
+            <div class="text-center">
+              <h2 class="fw-bold mb-2">{{ resume.title }}</h2>
+              <h5 class="text-muted mb-3">{{ resume.user.first_name }} {{ resume.user.last_name }}</h5>
+              {% if resume.summary %}
+                <p class="lead mb-0">{{ resume.summary }}</p>
+              {% endif %}
+            </div>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+              {% if resume.template %}
+                <span class="badge bg-primary">{{ resume.template.name }}</span>
+              {% endif %}
+              <span class="badge bg-light text-dark">{{ resume.language|upper }}</span>
               <span class="badge bg-{% if resume.visibility == 'PRIVATE' %}secondary{% elif resume.visibility == 'PUBLIC' %}success{% else %}warning{% endif %}">
                 {{ resume.get_visibility_display }}
               </span>
             </div>
           </div>
 
+          <!-- Work Experience -->
           {% if work_experiences %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-briefcase me-2"></i>Work Experience</h4>
+          <div class="resume-section mb-4">
+            <h4 class="section-title">
+              <i class="bi bi-briefcase text-primary me-2"></i>Work Experience
+            </h4>
             {% for exp in work_experiences %}
-            <div class="card mb-2 border-primary">
+            <div class="card mb-3 border-start border-primary border-4">
               <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <h5 class="mb-1">{{ exp.job_title }}</h5>
-                  <small class="text-muted">{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</small>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title mb-1">{{ exp.job_title }}</h5>
+                  <span class="badge bg-primary">{{ exp.start_date|date:"M Y" }} - {% if exp.end_date %}{{ exp.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                 </div>
                 <h6 class="text-primary mb-2">{{ exp.company }}</h6>
                 {% if exp.location %}
                   <p class="text-muted mb-2"><i class="bi bi-geo-alt me-1"></i>{{ exp.location }}</p>
                 {% endif %}
                 {% if exp.description %}
-                  <p>{{ exp.description }}</p>
+                  <p class="mb-2">{{ exp.description }}</p>
                 {% endif %}
               </div>
             </div>
@@ -75,15 +89,18 @@
           </div>
           {% endif %}
 
+          <!-- Education -->
           {% if educations %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-mortarboard me-2"></i>Education</h4>
+          <div class="resume-section mb-4">
+            <h4 class="section-title">
+              <i class="bi bi-mortarboard text-success me-2"></i>Education
+            </h4>
             {% for edu in educations %}
-            <div class="card mb-2 border-success">
+            <div class="card mb-3 border-start border-success border-4">
               <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <h5 class="mb-1">{{ edu.degree }}</h5>
-                  <small class="text-muted">{{ edu.start_date|date:"M Y" }} - {{ edu.end_date|date:"M Y" }}</small>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title mb-1">{{ edu.degree }}</h5>
+                  <span class="badge bg-success">{{ edu.start_date|date:"M Y" }} - {{ edu.end_date|date:"M Y" }}</span>
                 </div>
                 <h6 class="text-success mb-2">{{ edu.institution }}</h6>
                 {% if edu.location %}
@@ -93,7 +110,7 @@
                   <p class="mb-2"><strong>GPA:</strong> {{ edu.gpa }}</p>
                 {% endif %}
                 {% if edu.description %}
-                  <p>{{ edu.description }}</p>
+                  <p class="mb-0">{{ edu.description }}</p>
                 {% endif %}
               </div>
             </div>
@@ -101,9 +118,12 @@
           </div>
           {% endif %}
 
+          <!-- Technical Skills -->
           {% if technical_skills %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-code-slash me-2"></i>Technical Skills</h4>
+          <div class="resume-section mb-4">
+            <h4 class="section-title">
+              <i class="bi bi-code-slash text-info me-2"></i>Technical Skills
+            </h4>
             <div class="row">
               {% for skill in technical_skills %}
               <div class="col-md-6 mb-2">
@@ -111,7 +131,7 @@
                   <div class="card-body py-2 px-3">
                     <div class="d-flex justify-content-between align-items-center">
                       <span class="fw-bold">{{ skill.technology.name }}</span>
-                      <span class="badge bg-primary">{{ skill.get_proficiency_display }}</span>
+                      <span class="badge bg-info">{{ skill.get_proficiency_display }}</span>
                     </div>
                     {% if skill.years_experience > 0 %}
                       <small class="text-muted">{{ skill.years_experience }} years experience</small>
@@ -124,21 +144,24 @@
           </div>
           {% endif %}
 
+          <!-- Projects -->
           {% if projects %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-folder me-2"></i>Projects</h4>
+          <div class="resume-section mb-4">
+            <h4 class="section-title">
+              <i class="bi bi-folder text-warning me-2"></i>Projects
+            </h4>
             {% for project in projects %}
-            <div class="card mb-2 border-warning">
+            <div class="card mb-3 border-start border-warning border-4">
               <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <h5 class="mb-1">{{ project.title }}</h5>
-                  <small class="text-muted">{{ project.start_date|date:"M Y" }} - {% if project.end_date %}{{ project.end_date|date:"M Y" }}{% else %}Present{% endif %}</small>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title mb-1">{{ project.title }}</h5>
+                  <span class="badge bg-warning">{{ project.start_date|date:"M Y" }} - {% if project.end_date %}{{ project.end_date|date:"M Y" }}{% else %}Present{% endif %}</span>
                 </div>
                 {% if project.role %}
                   <h6 class="text-warning mb-2">{{ project.role }}</h6>
                 {% endif %}
                 {% if project.description %}
-                  <p>{{ project.description }}</p>
+                  <p class="mb-2">{{ project.description }}</p>
                 {% endif %}
                 {% if project.technologies.all %}
                   <p class="mb-2"><strong>Technologies:</strong> {{ project.technologies.all|join:", " }}</p>
@@ -154,15 +177,18 @@
           </div>
           {% endif %}
 
+          <!-- Certifications -->
           {% if certifications %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-award me-2"></i>Certifications</h4>
+          <div class="resume-section mb-4">
+            <h4 class="section-title">
+              <i class="bi bi-award text-info me-2"></i>Certifications
+            </h4>
             {% for cert in certifications %}
-            <div class="card mb-2 border-info">
+            <div class="card mb-3 border-start border-info border-4">
               <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <h5 class="mb-1">{{ cert.name }}</h5>
-                  <small class="text-muted">{{ cert.issue_date|date:"M Y" }}</small>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title mb-1">{{ cert.name }}</h5>
+                  <span class="badge bg-info">{{ cert.issue_date|date:"M Y" }}</span>
                 </div>
                 <h6 class="text-info mb-2">{{ cert.issuer }}</h6>
                 {% if cert.credential_id %}
@@ -179,99 +205,130 @@
           </div>
           {% endif %}
 
+          <!-- Awards -->
           {% if awards %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-trophy me-2"></i>Awards & Recognition</h4>
+          <div class="resume-section mb-4">
+            <h4 class="section-title">
+              <i class="bi bi-trophy text-success me-2"></i>Awards & Recognition
+            </h4>
             {% for award in awards %}
-            <div class="card mb-2 border-success">
+            <div class="card mb-3 border-start border-success border-4">
               <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <h5 class="mb-1">{{ award.title }}</h5>
-                  <small class="text-muted">{{ award.issue_date|date:"M Y" }}</small>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title mb-1">{{ award.title }}</h5>
+                  <span class="badge bg-success">{{ award.issue_date|date:"M Y" }}</span>
                 </div>
                 <h6 class="text-success mb-2">{{ award.issuer }}</h6>
                 {% if award.description %}
-                  <p>{{ award.description }}</p>
+                  <p class="mb-0">{{ award.description }}</p>
                 {% endif %}
               </div>
             </div>
             {% endfor %}
           </div>
           {% endif %}
-
-          {% if languages %}
-          <div class="mb-4">
-            <h4 class="text-primary mb-3"><i class="bi bi-translate me-2"></i>Languages</h4>
-            <div class="row">
-              {% for lang in languages %}
-              <div class="col-md-6 mb-2">
-                <div class="card border-success">
-                  <div class="card-body py-2 px-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <span class="fw-bold">{{ lang.name }}</span>
-                      <span class="badge bg-success">{{ lang.get_proficiency_display }}</span>
-                    </div>
-                    {% if lang.certification %}
-                      <small class="text-muted">{{ lang.certification }}</small>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-          {% endif %}
         </div>
       </div>
     </div>
+
     <!-- Sidebar -->
     <div class="col-lg-4">
+      <!-- Resume Info -->
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">Quick Actions</h5>
+          <h6 class="card-title">Resume Information</h6>
+          <div class="space-y-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Template:</span>
+              <span class="fw-bold">{{ resume.template.name|default:"Not selected" }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Language:</span>
+              <span class="fw-bold">{{ resume.language|upper }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Visibility:</span>
+              <span class="badge bg-{% if resume.visibility == 'PRIVATE' %}secondary{% elif resume.visibility == 'PUBLIC' %}success{% else %}warning{% endif %}">
+                {{ resume.get_visibility_display }}
+              </span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Created:</span>
+              <span class="fw-bold">{{ resume.created_at|date:"M d, Y" }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Updated:</span>
+              <span class="fw-bold">{{ resume.updated_at|date:"M d, Y" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h6 class="card-title">Quick Actions</h6>
           <div class="d-grid gap-2">
-            <a href="{% url 'work_experience_create' %}" class="btn btn-outline-primary">
-              <i class="bi bi-plus-circle me-2"></i>Add Work Experience
+            <a href="{% url 'resume_update' resume.pk %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-pencil me-2"></i>Edit Resume
             </a>
-            <a href="{% url 'education_create' %}" class="btn btn-outline-primary">
-              <i class="bi bi-plus-circle me-2"></i>Add Education
+            <a href="{% url 'resume_download' resume.pk %}" class="btn btn-outline-success btn-sm">
+              <i class="bi bi-download me-2"></i>Download PDF
             </a>
-            <a href="{% url 'technicalskill_create' %}" class="btn btn-outline-primary">
-              <i class="bi bi-plus-circle me-2"></i>Add Skills
+            <a href="{% url 'resume_template_selection' resume.pk %}" class="btn btn-outline-info btn-sm">
+              <i class="bi bi-palette me-2"></i>Change Template
             </a>
-            <a href="{% url 'project_create' %}" class="btn btn-outline-primary">
-              <i class="bi bi-plus-circle me-2"></i>Add Project
+            <a href="{% url 'resume_delete' resume.pk %}" class="btn btn-outline-danger btn-sm">
+              <i class="bi bi-trash me-2"></i>Delete Resume
             </a>
           </div>
         </div>
       </div>
+
+      <!-- Section Status -->
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Resume Statistics</h5>
-          <div class="row text-center">
-            <div class="col-6">
-              <div class="stat-item">
-                <h4 class="text-primary">{{ work_experiences.count }}</h4>
-                <small>Work Experience</small>
-              </div>
+          <h6 class="card-title">Section Status</h6>
+          <div class="space-y-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small">Work Experience</span>
+              {% if work_experiences %}
+                <i class="bi bi-check-circle-fill text-success"></i>
+              {% else %}
+                <i class="bi bi-circle text-muted"></i>
+              {% endif %}
             </div>
-            <div class="col-6">
-              <div class="stat-item">
-                <h4 class="text-success">{{ educations.count }}</h4>
-                <small>Education</small>
-              </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small">Education</span>
+              {% if educations %}
+                <i class="bi bi-check-circle-fill text-success"></i>
+              {% else %}
+                <i class="bi bi-circle text-muted"></i>
+              {% endif %}
             </div>
-            <div class="col-6">
-              <div class="stat-item">
-                <h4 class="text-warning">{{ technical_skills.count }}</h4>
-                <small>Skills</small>
-              </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small">Skills</span>
+              {% if technical_skills %}
+                <i class="bi bi-check-circle-fill text-success"></i>
+              {% else %}
+                <i class="bi bi-circle text-muted"></i>
+              {% endif %}
             </div>
-            <div class="col-6">
-              <div class="stat-item">
-                <h4 class="text-info">{{ projects.count }}</h4>
-                <small>Projects</small>
-              </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small">Projects</span>
+              {% if projects %}
+                <i class="bi bi-check-circle-fill text-success"></i>
+              {% else %}
+                <i class="bi bi-circle text-muted"></i>
+              {% endif %}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small">Certifications</span>
+              {% if certifications %}
+                <i class="bi bi-check-circle-fill text-success"></i>
+              {% else %}
+                <i class="bi bi-circle text-muted"></i>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -279,38 +336,26 @@
     </div>
   </div>
 </section>
-{% endblock %}
 
-{% block extra_css %}
 <style>
-.resume-section {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
-}
-
-.resume-section:last-child {
-  border-bottom: none;
-}
-
 .section-title {
-  color: #333;
-  font-size: 1.25rem;
+  color: var(--dark-color);
+  font-weight: 600;
   margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
 }
 
-.experience-item, .education-item, .project-item, .certification-item, .award-item {
-  padding: 1rem;
-  border-left: 3px solid #007bff;
-  background-color: #f8f9fa;
-  border-radius: 0 0.25rem 0.25rem 0;
+.resume-section {
+  margin-bottom: 2rem;
 }
 
-.stat-item {
-  padding: 1rem 0;
+.space-y-3 > * + * {
+  margin-top: 1rem;
 }
 
-.stat-item h4 {
-  margin-bottom: 0.5rem;
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
 }
 </style>
 {% endblock %} 
