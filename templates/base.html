@@ -445,56 +445,19 @@
         </li>
       </ul>
     </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% block content %}{% endblock %}
-    </main>
-  {% else %}
-    <!-- Landing Page for Non-Authenticated Users -->
-    <div class="landing-page">
-      <div class="landing-content">
-        <h1>ResumeBuilder Pro</h1>
-        <p>Create professional resumes that stand out and get you hired. Build, customize, and download your perfect resume in minutes.</p>
-        
-        <div class="d-flex gap-3 justify-content-center mb-4">
-          <a href="{% url 'login' %}" class="btn btn-light btn-lg">
-            <i class="bi bi-box-arrow-in-right me-2"></i>Get Started
-          </a>
-          <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">
-            <i class="bi bi-person-plus me-2"></i>Sign Up
-          </a>
-        </div>
-
-        <div class="landing-features">
-          <div class="feature-card">
-            <i class="bi bi-palette"></i>
-            <h3>Professional Templates</h3>
-            <p>Choose from multiple professional templates designed for different industries</p>
-          </div>
-          <div class="feature-card">
-            <i class="bi bi-pencil-square"></i>
-            <h3>Easy Customization</h3>
-            <p>Simple drag-and-drop interface to customize your resume exactly how you want</p>
-          </div>
-          <div class="feature-card">
-            <i class="bi bi-download"></i>
-            <h3>Instant Download</h3>
-            <p>Download your resume as PDF or share it directly with employers</p>
-          </div>
-        </div>
-      </div>
-    </div>
   {% endif %}
+  <!-- Main Content -->
+  <main class="main-content">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

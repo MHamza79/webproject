@@ -2,9 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Confirm Your Email - DiamondTalent</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f9fb;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 480px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px 0 rgba(76, 68, 182, 0.10);
+            padding: 32px 32px 24px 32px;
+            border-top: 6px solid #6C63FF;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .logo img {
+            width: 60px;
+            height: 60px;
+        }
+        h2 {
+            color: #6C63FF;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        p {
+            font-size: 1.08rem;
+            color: #444;
+            text-align: center;
+        }
+        .button {
+            display: block;
+            width: 220px;
+            margin: 32px auto 0 auto;
+            background: linear-gradient(135deg, #6C63FF 0%, #48C6EF 100%);
+            color: #fff !important;
+            text-align: center;
+            padding: 14px 0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(76, 68, 182, 0.10);
+            letter-spacing: 1px;
+        }
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+    </style>
 </head>
 <body>
-
+<div class="container">
+    <div class="logo">
+        <img src="https://i.imgur.com/6C63FF.png" alt="DiamondTalent Logo">
+    </div>
+    <h2>Confirm Your Email</h2>
+    <p>Thank you for registering with DiamondTalent!<br>
+        Please confirm your email address to activate your account.</p>
+    <a href="{{ activate_url }}" class="button">Confirm Email</a>
+    <div class="footer">
+        If you did not sign up for this account, you can ignore this email.<br>
+        &copy; {{ now|date:'Y' }} DiamondTalent
+    </div>
+</div>
 </body>
 </html>

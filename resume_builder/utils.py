@@ -40,56 +40,105 @@ def generate_resume_pdf(resume, context_data=None):
         # Get styles
         styles = getSampleStyleSheet()
         
-        # Create custom styles
-        title_style = ParagraphStyle(
-            'CustomTitle',
-            parent=styles['Heading1'],
-            fontSize=24,
-            spaceAfter=20,
-            alignment=TA_CENTER,
-            textColor=colors.HexColor('#2c3e50')
-        )
-        
-        section_style = ParagraphStyle(
-            'SectionTitle',
-            parent=styles['Heading2'],
-            fontSize=16,
-            spaceAfter=10,
-            spaceBefore=20,
-            textColor=colors.HexColor('#2c3e50'),
-            borderWidth=1,
-            borderColor=colors.HexColor('#3498db'),
-            borderPadding=5
-        )
-        
-        job_title_style = ParagraphStyle(
-            'JobTitle',
-            parent=styles['Normal'],
-            fontSize=12,
-            spaceAfter=5,
-            textColor=colors.HexColor('#34495e'),
-            fontName='Helvetica-Bold'
-        )
-        
-        company_style = ParagraphStyle(
-            'Company',
-            parent=styles['Normal'],
-            fontSize=10,
-            spaceAfter=5,
-            textColor=colors.HexColor('#7f8c8d'),
-            fontName='Helvetica-Oblique'
-        )
-        
-        content_style = ParagraphStyle(
-            'Content',
-            parent=styles['Normal'],
-            fontSize=10,
-            spaceAfter=8,
-            alignment=TA_JUSTIFY
-        )
-        
+        # --- Template Selection ---
+        template_type = None
+        if hasattr(resume, 'template') and resume.template:
+            # If using ResumeTemplate FK
+            if hasattr(resume.template, 'format_type'):
+                template_type = resume.template.format_type.upper()
+            else:
+                # If using string field
+                template_type = str(resume.template).upper()
+        else:
+            template_type = 'CLASSIC'
+
+        # --- Styles for Each Template ---
+        if template_type == 'MODERN':
+            # Modern Creative: color accents, two-column, icons
+            title_style = ParagraphStyle(
+                'ModernTitle', parent=styles['Heading1'], fontSize=26, spaceAfter=18, alignment=TA_CENTER,
+                textColor=colors.HexColor('#6C63FF'), fontName='Helvetica-Bold')
+            section_style = ParagraphStyle(
+                'ModernSection', parent=styles['Heading2'], fontSize=16, spaceAfter=8, spaceBefore=18,
+                textColor=colors.HexColor('#6C63FF'), borderWidth=0, fontName='Helvetica-Bold')
+            job_title_style = ParagraphStyle(
+                'ModernJobTitle', parent=styles['Normal'], fontSize=12, spaceAfter=2, textColor=colors.HexColor('#22223B'), fontName='Helvetica-Bold')
+            company_style = ParagraphStyle(
+                'ModernCompany', parent=styles['Normal'], fontSize=10, spaceAfter=2, textColor=colors.HexColor('#9A8C98'), fontName='Helvetica-Oblique')
+            content_style = ParagraphStyle(
+                'ModernContent', parent=styles['Normal'], fontSize=10, spaceAfter=6, alignment=TA_JUSTIFY)
+            contact_style = ParagraphStyle(
+                'ModernContact', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#6C63FF'), alignment=TA_CENTER, spaceAfter=14, leading=15)
+        elif template_type == 'TECHNICAL':
+            # Technical Specialist: sidebar for contact/skills, main for experience/projects
+            title_style = ParagraphStyle(
+                'TechTitle', parent=styles['Heading1'], fontSize=24, spaceAfter=16, alignment=TA_CENTER,
+                textColor=colors.HexColor('#0077B6'), fontName='Helvetica-Bold')
+            section_style = ParagraphStyle(
+                'TechSection', parent=styles['Heading2'], fontSize=15, spaceAfter=7, spaceBefore=15,
+                textColor=colors.HexColor('#0077B6'), borderWidth=0, fontName='Helvetica-Bold')
+            job_title_style = ParagraphStyle(
+                'TechJobTitle', parent=styles['Normal'], fontSize=12, spaceAfter=2, textColor=colors.HexColor('#023E8A'), fontName='Helvetica-Bold')
+            company_style = ParagraphStyle(
+                'TechCompany', parent=styles['Normal'], fontSize=10, spaceAfter=2, textColor=colors.HexColor('#90E0EF'), fontName='Helvetica-Oblique')
+            content_style = ParagraphStyle(
+                'TechContent', parent=styles['Normal'], fontSize=10, spaceAfter=6, alignment=TA_JUSTIFY)
+            contact_style = ParagraphStyle(
+                'TechContact', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#0077B6'), alignment=TA_CENTER, spaceAfter=14, leading=15)
+        else:
+            # Classic Professional: clean, blue/gray, single-column
+            title_style = ParagraphStyle(
+                'ClassicTitle', parent=styles['Heading1'], fontSize=24, spaceAfter=20, alignment=TA_CENTER,
+                textColor=colors.HexColor('#2c3e50'))
+            section_style = ParagraphStyle(
+                'ClassicSection', parent=styles['Heading2'], fontSize=16, spaceAfter=10, spaceBefore=20,
+                textColor=colors.HexColor('#2c3e50'), borderWidth=1, borderColor=colors.HexColor('#3498db'), borderPadding=5)
+            job_title_style = ParagraphStyle(
+                'ClassicJobTitle', parent=styles['Normal'], fontSize=12, spaceAfter=5, textColor=colors.HexColor('#34495e'), fontName='Helvetica-Bold')
+            company_style = ParagraphStyle(
+                'ClassicCompany', parent=styles['Normal'], fontSize=10, spaceAfter=5, textColor=colors.HexColor('#7f8c8d'), fontName='Helvetica-Oblique')
+            content_style = ParagraphStyle(
+                'ClassicContent', parent=styles['Normal'], fontSize=10, spaceAfter=8, alignment=TA_JUSTIFY)
+            contact_style = ParagraphStyle(
+                'ClassicContact', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#2c3e50'), alignment=TA_CENTER, spaceAfter=16, leading=15)
+
         # Build the story (content)
         story = []
+        
+        # Contact Info Section (improved)
+        user = resume.user
+        contact_lines = []
+        # Name
+        name = ''
+        if hasattr(user, 'get_full_name') and user.get_full_name():
+            name = user.get_full_name()
+        elif hasattr(user, 'first_name') or hasattr(user, 'last_name'):
+            name = f"{getattr(user, 'first_name', '')} {getattr(user, 'last_name', '')}".strip()
+        if name:
+            contact_lines.append(f"<b>Name:</b> {name}")
+        # Professional Email (prefer resume, fallback to user)
+        email = getattr(resume, 'professional_email', None) or getattr(user, 'email', None)
+        if email:
+            contact_lines.append(f"<b>Email:</b> {email}")
+        # Phone (prefer resume, fallback to user)
+        phone = getattr(resume, 'phone', None) or getattr(user, 'phone', None)
+        if phone:
+            contact_lines.append(f"<b>Phone:</b> {phone}")
+        # Location
+        location = getattr(resume, 'location', None)
+        if location:
+            contact_lines.append(f"<b>Location:</b> {location}")
+        # GitHub
+        github = getattr(resume, 'github_url', None)
+        if github:
+            contact_lines.append(f"<b>GitHub:</b> {github}")
+        # LinkedIn
+        linkedin = getattr(resume, 'linkedin_url', None)
+        if linkedin:
+            contact_lines.append(f"<b>LinkedIn:</b> {linkedin}")
+        if contact_lines:
+            contact_info = '<br/>'.join(contact_lines)
+            story.append(Paragraph(contact_info, contact_style))
         
         # Title
         story.append(Paragraph(resume.title, title_style))

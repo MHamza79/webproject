@@ -91,6 +91,11 @@ class Resume(models.Model):
     view_count = models.IntegerField(default=0)
     download_count = models.IntegerField(default=0)
     last_accessed = models.DateTimeField(auto_now=True)
+    github_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    professional_email = models.EmailField(blank=True, null=True)
 
     # AI Analysis fields
     ats_score = models.IntegerField(null=True, blank=True)

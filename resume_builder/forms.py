@@ -18,6 +18,10 @@ class JSONFieldWidget(forms.Textarea):
         if value is None:
             return ''
         if isinstance(value, (list, dict)):
+            # Always return a string for rendering
+            if isinstance(value, list):
+                # Render as lines for user-friendly editing
+                return '\n'.join(str(v) for v in value)
             return json.dumps(value, indent=2)
         return str(value)
     
@@ -25,6 +29,9 @@ class JSONFieldWidget(forms.Textarea):
         value = super().value_from_datadict(data, files, name)
         if not value:
             return []
+        # PATCH: If value is already a list, join as string for rendering
+        if isinstance(value, list):
+            return '\n'.join(str(v) for v in value)
         try:
             # Handle both list and dict formats
             parsed = json.loads(value)
@@ -32,7 +39,7 @@ class JSONFieldWidget(forms.Textarea):
                 # Convert dict to list if it's meant to be a list
                 return [parsed] if parsed else []
             return parsed if isinstance(parsed, list) else [parsed]
-        except json.JSONDecodeError:
+        except Exception:
             # If JSON parsing fails, treat as plain text and split by lines
             lines = [line.strip() for line in value.split('\n') if line.strip()]
             return lines
@@ -51,7 +58,7 @@ class ResumeTemplateForm(forms.ModelForm):
 class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
-        fields = ['title', 'slug', 'summary', 'tags', 'template', 'visibility']  # Removed 'language'
+        fields = ['title', 'slug', 'summary', 'tags', 'template', 'visibility', 'github_url', 'linkedin_url', 'location', 'phone', 'professional_email']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'slug': forms.TextInput(attrs={'class': 'form-control'}),
@@ -59,6 +66,11 @@ class ResumeForm(forms.ModelForm):
             'tags': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter tags separated by commas'}),
             'template': forms.Select(attrs={'class': 'form-select'}),
             'visibility': forms.Select(attrs={'class': 'form-select'}),
+            'github_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://github.com/yourprofile'}),
+            'linkedin_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://linkedin.com/in/yourprofile'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City, Country'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contact Number'}),
+            'professional_email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Professional Email'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -102,9 +114,14 @@ class ResumeSectionForm(forms.ModelForm):
         }
 
 class WorkExperienceForm(forms.ModelForm):
+    new_technologies = forms.CharField(
+        required=False,
+        label='Technologies & Achievements (comma-separated or free text)',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'e.g. Python, React, AWS, Improved app performance by 30%', 'rows': 3})
+    )
     class Meta:
         model = WorkExperience
-        fields = ['resume', 'job_title', 'company', 'location', 'start_date', 'end_date', 'is_current', 'description', 'achievements', 'technologies']
+        fields = ['resume', 'job_title', 'company', 'location', 'start_date', 'end_date', 'is_current', 'description', 'new_technologies']
         widgets = {
             'resume': forms.Select(attrs={'class': 'form-select'}),
             'job_title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -114,25 +131,11 @@ class WorkExperienceForm(forms.ModelForm):
             'end_date': DatePickerInput(attrs={'class': 'form-control'}),
             'is_current': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'achievements': JSONFieldWidget(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter achievements, one per line'}),
-            'technologies': forms.SelectMultiple(attrs={'class': 'form-select', 'size': 5}),
+            'new_technologies': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'e.g. Python, React, AWS, Improved app performance by 30%'}),
         }
-
-    def clean(self):
-        cleaned_data = super().clean()
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-        is_current = cleaned_data.get('is_current')
-        
-        # Validate dates
-        if start_date and end_date and start_date > end_date:
-            raise forms.ValidationError("Start date cannot be after end date.")
-        
-        # If current job, end_date should be empty
-        if is_current and end_date:
-            cleaned_data['end_date'] = None
-        
-        return cleaned_data
+        help_texts = {
+            'new_technologies': 'List technologies and achievements, separated by commas or as free text.'
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -149,24 +152,13 @@ class WorkExperienceForm(forms.ModelForm):
                 self.fields['resume'].required = True
                 self.fields['resume'].widget.attrs['disabled'] = 'disabled'
 
-    def form_valid(self, form):
-        # Ensure the resume belongs to the user
-        resume = form.cleaned_data['resume']
-        if resume.user != self.request.user:
-            form.add_error('resume', 'You do not own this resume.')
-            return self.form_invalid(form)
-        
-        # Handle achievements field
-        if 'achievements' in form.cleaned_data:
-            achievements = form.cleaned_data['achievements']
-            if isinstance(achievements, str):
-                # Convert string to list if needed
-                lines = [line.strip() for line in achievements.split('\n') if line.strip()]
-                form.instance.achievements = lines
-            elif isinstance(achievements, list):
-                form.instance.achievements = achievements
-        
-        return super().form_valid(form)
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # Optionally, you can parse and store new_technologies somewhere if needed
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
 
 class TechnicalSkillForm(forms.ModelForm):
     class Meta:

@@ -19,6 +19,16 @@ from django.urls import path,include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from allauth.account.views import LoginView
+
+# Direct root URL to login for unauthenticated users, dashboard for authenticated
+
+def root_view(request):
+    if request.user.is_authenticated:
+        return redirect('/dashboard/')
+    return LoginView.as_view()(request)
 
 web_patterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +38,8 @@ web_patterns = [
     path('accounts/', include('allauth.urls')),
     path('jobs/', include('jobs.urls')),
     path('applications/', include('applications.urls')),
-    path('', include('dashboard.urls')),
+    path('dashboard/', include('dashboard.urls')),  # Add dashboard URLs under 'dashboard/'
+    path('', root_view, name='root'),
 ]
 apis_patterns = [
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),

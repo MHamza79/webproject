@@ -110,6 +110,76 @@
               </div>
             </div>
 
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.github_url.id_for_label }}" class="form-label">
+                  GitHub URL <i class="bi bi-github tooltip-icon" data-bs-toggle="tooltip" title="Link to your GitHub profile (optional)"></i>
+                </label>
+                {{ form.github_url }}
+                {% if form.github_url.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.github_url.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.linkedin_url.id_for_label }}" class="form-label">
+                  LinkedIn URL <i class="bi bi-linkedin tooltip-icon" data-bs-toggle="tooltip" title="Link to your LinkedIn profile (optional)"></i>
+                </label>
+                {{ form.linkedin_url }}
+                {% if form.linkedin_url.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.linkedin_url.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.location.id_for_label }}" class="form-label">
+                Location <i class="bi bi-geo-alt tooltip-icon" data-bs-toggle="tooltip" title="Your current location (city, country)"></i>
+              </label>
+              {{ form.location }}
+              {% if form.location.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.location.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.phone.id_for_label }}" class="form-label">
+                  Contact Number <i class="bi bi-telephone tooltip-icon" data-bs-toggle="tooltip" title="Your phone number (optional)"></i>
+                </label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.phone.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.professional_email.id_for_label }}" class="form-label">
+                  Professional Email <i class="bi bi-envelope tooltip-icon" data-bs-toggle="tooltip" title="Your professional email address (optional)"></i>
+                </label>
+                {{ form.professional_email }}
+                {% if form.professional_email.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.professional_email.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
             <div class="d-flex gap-3 justify-content-end">
               <a href="{% url 'resume_list' %}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-2"></i>Cancel

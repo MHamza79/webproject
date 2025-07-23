@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to ResumeBuilder Pro{% endblock %}
+{% block content %}
+<div class="container text-center py-5">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-lg-8">
+            <h1 class="display-3 mb-4">Welcome to ResumeBuilder Pro</h1>
+            <p class="lead mb-4">
+                Build, customize, and download your perfect resume in minutes. Our professional templates and easy-to-use tools help you stand out and get hired faster.
+            </p>
+            <ul class="list-unstyled mb-4">
+                <li>✔️ Multiple professional templates</li>
+                <li>✔️ Easy drag-and-drop customization</li>
+                <li>✔️ Instant PDF download</li>
+                <li>✔️ AI-powered suggestions</li>
+            </ul>
+            <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg px-5 py-3">Get Started</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

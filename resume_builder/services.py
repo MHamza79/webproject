@@ -57,7 +57,9 @@ class ResumeAnalyzer:
             content_parts.append(f"{edu.degree} {edu.institution}")
         
         for skill in self.resume.technical_skills.all():
-            content_parts.append(f"{skill.name} {skill.description}")
+            tech_name = skill.technology.name if skill.technology else ''
+            description = getattr(skill, 'description', '')
+            content_parts.append(f"{tech_name} {description}")
         
         for project in self.resume.projects.all():
             content_parts.append(f"{project.title} {project.description}")
@@ -204,7 +206,9 @@ Best regards,
         """Get primary skill from resume"""
         skills = self.resume.technical_skills.all()
         if skills.exists():
-            return skills.first().name
+            first_skill = skills.first()
+            if first_skill.technology and hasattr(first_skill.technology, 'name'):
+                return first_skill.technology.name
         return "professional development"
     
     def _get_user_name(self) -> str:

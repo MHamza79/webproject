@@ -10,7 +10,7 @@ from django.contrib import messages
 import os
 import re
 
-from resume_builder.models import WorkExperience, Education, Project, Certification, Award, Language, Resume, TechnicalSkill
+from resume_builder.models import WorkExperience, Education, Project, Certification, Award, Language, Resume, TechnicalSkill, ResumeTemplate
 from resume_builder.forms import WorkExperienceForm, EducationForm, ProjectForm, CertificationForm, AwardForm, LanguageForm, TechnicalSkillForm, ResumeTemplateSelectionForm, ResumeForm
 from resume_builder.utils import generate_resume_pdf, get_safe_filename
 from resume_builder.services import ResumeAnalyzer, ResumeEnhancer
@@ -31,11 +31,39 @@ class WorkExperienceCreateView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        user = self.request.user
+        user_resumes = Resume.objects.filter(user=user)
+        if not user_resumes.exists():
+            # Create a default resume for the user with a unique slug
+            from django.utils.text import slugify
+            base_slug = slugify(f"{user.username}-my-first-resume")
+            slug = base_slug
+            counter = 1
+            while Resume.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            default_resume = Resume.objects.create(
+                user=user,
+                title='My First Resume',
+                slug=slug,
+                summary='',
+                tags=[],
+                template=ResumeTemplate.objects.first().name if ResumeTemplate.objects.first() else 'modern',
+                visibility='PRIVATE',
+            )
+            user_resumes = Resume.objects.filter(user=user)
+        kwargs['user'] = user
         return kwargs
 
+    def get_initial(self):
+        initial = super().get_initial()
+        user = self.request.user
+        user_resumes = Resume.objects.filter(user=user)
+        if user_resumes.exists():
+            initial['resume'] = user_resumes.first()
+        return initial
+
     def form_valid(self, form):
-        # Ensure the resume belongs to the user
         resume = form.cleaned_data['resume']
         if resume.user != self.request.user:
             form.add_error('resume', 'You do not own this resume.')
@@ -50,7 +78,7 @@ class WorkExperienceUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateVi
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        # Remove 'user' kwarg, not needed anymore
         return kwargs
 
     def test_func(self):
