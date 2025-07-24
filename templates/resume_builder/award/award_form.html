@@ -100,22 +100,14 @@
             {% endfor %}
           </div>
           <div class="col-12 mb-3">
-            <label class="form-label">{{ form.description.label }}</label>
+            <label class="form-label">{{ form.description.label }}
+              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Describe the award and its significance."></i>
+            </label>
             {{ form.description|add_class:"form-control"|attr:"rows:4" }}
             {% if form.description.help_text %}
               <small class="form-text text-muted">{{ form.description.help_text }}</small>
             {% endif %}
             {% for err in form.description.errors %}
-              <div class="invalid-feedback d-block">{{ err }}</div>
-            {% endfor %}
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">{{ form.impact_metrics.label }}</label>
-            {{ form.impact_metrics|add_class:"form-control"|attr:"rows:3" }}
-            {% if form.impact_metrics.help_text %}
-              <small class="form-text text-muted">{{ form.impact_metrics.help_text }}</small>
-            {% endif %}
-            {% for err in form.impact_metrics.errors %}
               <div class="invalid-feedback d-block">{{ err }}</div>
             {% endfor %}
           </div>

@@ -135,18 +135,6 @@
               <div class="invalid-feedback d-block">{{ err }}</div>
             {% endfor %}
           </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">{{ form.outcomes.label }}
-              <i class="bi bi-question-circle" data-bs-toggle="tooltip" title="Key outcomes or results of the project."></i>
-            </label>
-            {{ form.outcomes|add_class:"form-control"|attr:"rows:3" }}
-            {% if form.outcomes.help_text %}
-              <small class="form-text text-muted">{{ form.outcomes.help_text }}</small>
-            {% endif %}
-            {% for err in form.outcomes.errors %}
-              <div class="invalid-feedback d-block">{{ err }}</div>
-            {% endfor %}
-          </div>
         </div>
         <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Save</button>
         <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>

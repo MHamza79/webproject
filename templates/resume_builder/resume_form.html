@@ -50,10 +50,13 @@
               </div>
 
               <div class="col-md-6 mb-3">
-                <label for="{{ form.template.id_for_label }}" class="form-label">
+                <label class="form-label">
                   Template <i class="bi bi-question-circle tooltip-icon" data-bs-toggle="tooltip" title="Choose a professional template for your resume"></i>
                 </label>
-                {{ form.template }}
+                <select name="template" class="form-select" required>
+                  <option value="modern" {% if form.template.value == 'modern' %}selected{% endif %}>Modern - Clean, contemporary, and professional</option>
+                  <option value="classic" {% if form.template.value == 'classic' %}selected{% endif %}>Classic - Traditional, elegant, and timeless</option>
+                </select>
                 {% if form.template.errors %}
                   <div class="invalid-feedback d-block">
                     {% for error in form.template.errors %}

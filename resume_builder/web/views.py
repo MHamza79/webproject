@@ -292,6 +292,9 @@ class AwardCreateView(LoginRequiredMixin, CreateView):
         if resume.user != self.request.user:
             form.add_error('resume', 'You do not own this resume.')
             return self.form_invalid(form)
+        # Patch: Always set impact_metrics to {} if not provided
+        if not form.instance.impact_metrics:
+            form.instance.impact_metrics = {}
         return super().form_valid(form)
 
 class AwardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -307,6 +310,12 @@ class AwardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         return self.get_object().resume.user == self.request.user
+
+    def form_valid(self, form):
+        # Patch: Always set impact_metrics to {} if not provided
+        if not form.instance.impact_metrics:
+            form.instance.impact_metrics = {}
+        return super().form_valid(form)
 
 class AwardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Award

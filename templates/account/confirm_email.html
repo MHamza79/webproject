@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Email Confirmed - DiamondTalent</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f9fb; color: #222; margin: 0; padding: 0; }
+        .container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px 0 rgba(76, 68, 182, 0.10); padding: 32px 32px 24px 32px; border-top: 6px solid #6C63FF; text-align: center; }
+        .logo { margin-bottom: 24px; }
+        .logo img { width: 60px; height: 60px; }
+        h2 { color: #6C63FF; margin-bottom: 18px; }
+        p { font-size: 1.08rem; color: #444; }
+        .button { display: inline-block; background: linear-gradient(135deg, #6C63FF 0%, #48C6EF 100%); color: #fff !important; text-align: center; padding: 12px 32px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 8px rgba(76, 68, 182, 0.10); letter-spacing: 1px; margin-top: 24px; }
+        .footer { margin-top: 32px; color: #aaa; font-size: 0.95rem; }
+    </style>
 </head>
 <body>
-
+<div class="container">
+    <div class="logo">
+        <img src="https://i.imgur.com/6C63FF.png" alt="DiamondTalent Logo">
+    </div>
+    <h2>Email Confirmed!</h2>
+    <p>Your email has been successfully confirmed.<br>You can now log in to your account.</p>
+    <a href="{% url 'account_login' %}" class="button">Log In</a>
+    <div class="footer">
+        &copy; {{ now|date:'Y' }} DiamondTalent
+    </div>
+</div>
 </body>
 </html>

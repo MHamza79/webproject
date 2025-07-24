@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logged Out - DiamondTalent</title>
-    <meta http-equiv="refresh" content="2;url={% url 'account_login' %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
     <style>
         body {
             background: linear-gradient(135deg, #6C63FF 0%, #48C6EF 100%);
@@ -37,6 +38,11 @@
             justify-content: center;
             box-shadow: 0 2px 8px rgba(76, 68, 182, 0.12);
         }
+        .logo-container {
+            margin: 0 auto 1rem auto;
+            width: 60px;
+            height: 60px;
+        }
         .logout-title {
             font-weight: 700;
             color: #6C63FF;
@@ -61,10 +67,10 @@
 </head>
 <body>
     <div class="logout-message">
-        <div class="logout-logo mx-auto mb-3">
+        <div class="logout-logo logo-container">
             <img src="{% static 'img/logo1.png' %}" alt="DiamondTalent Logo" style="width: 38px; height: 38px;">
         </div>
-        <div class="logout-title">You have been logged out</div>
+        <div class="logout-title" aria-label="Logout confirmation">You have been logged out</div>
         <div class="logout-text">Thank you for using DiamondTalent.<br>You will be redirected to the login page shortly.</div>
         <div class="logout-link">
             <a href="{% url 'account_login' %}">Click here to login again</a>

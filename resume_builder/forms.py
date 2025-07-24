@@ -249,7 +249,7 @@ class TechnologyForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['resume', 'title', 'role', 'start_date', 'end_date', 'description', 'technologies', 'outcomes', 'url', 'is_active']
+        fields = ['resume', 'title', 'role', 'start_date', 'end_date', 'description', 'technologies', 'url', 'is_active']
         widgets = {
             'resume': forms.Select(attrs={'class': 'form-select'}),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -258,7 +258,6 @@ class ProjectForm(forms.ModelForm):
             'end_date': DatePickerInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'technologies': forms.SelectMultiple(attrs={'class': 'form-select', 'size': 5}),
-            'outcomes': JSONFieldWidget(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter project outcomes'}),
             'url': forms.URLInput(attrs={'class': 'form-control'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
@@ -278,26 +277,11 @@ class ProjectForm(forms.ModelForm):
                 self.fields['resume'].required = True
                 self.fields['resume'].widget.attrs['disabled'] = 'disabled'
 
-    def form_valid(self, form):
-        resume = form.cleaned_data['resume']
-        if resume.user != self.request.user:
-            form.add_error('resume', 'You do not own this resume.')
-            return self.form_invalid(form)
-        
-        # Handle outcomes field
-        if 'outcomes' in form.cleaned_data:
-            outcomes = form.cleaned_data['outcomes']
-            if isinstance(outcomes, str):
-                # Convert string to dict if needed
-                try:
-                    form.instance.outcomes = json.loads(outcomes)
-                except json.JSONDecodeError:
-                    # If JSON parsing fails, treat as plain text
-                    form.instance.outcomes = {'description': outcomes}
-            elif isinstance(outcomes, dict):
-                form.instance.outcomes = outcomes
-        
-        return super().form_valid(form)
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.outcomes:
+            self.instance.outcomes = {}
+        return cleaned_data
 
 class CertificationForm(forms.ModelForm):
     class Meta:
@@ -332,7 +316,7 @@ class CertificationForm(forms.ModelForm):
 class AwardForm(forms.ModelForm):
     class Meta:
         model = Award
-        fields = ['resume', 'title', 'issuer', 'issue_date', 'category', 'description', 'impact_metrics', 'is_visible']
+        fields = ['resume', 'title', 'issuer', 'issue_date', 'category', 'description', 'is_visible']
         widgets = {
             'resume': forms.Select(attrs={'class': 'form-select'}),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -340,7 +324,6 @@ class AwardForm(forms.ModelForm):
             'issue_date': DatePickerInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'impact_metrics': JSONFieldWidget(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter impact metrics'}),
             'is_visible': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
@@ -359,26 +342,11 @@ class AwardForm(forms.ModelForm):
                 self.fields['resume'].required = True
                 self.fields['resume'].widget.attrs['disabled'] = 'disabled'
 
-    def form_valid(self, form):
-        resume = form.cleaned_data['resume']
-        if resume.user != self.request.user:
-            form.add_error('resume', 'You do not own this resume.')
-            return self.form_invalid(form)
-        
-        # Handle impact_metrics field
-        if 'impact_metrics' in form.cleaned_data:
-            impact_metrics = form.cleaned_data['impact_metrics']
-            if isinstance(impact_metrics, str):
-                # Convert string to dict if needed
-                try:
-                    form.instance.impact_metrics = json.loads(impact_metrics)
-                except json.JSONDecodeError:
-                    # If JSON parsing fails, treat as plain text
-                    form.instance.impact_metrics = {'description': impact_metrics}
-            elif isinstance(impact_metrics, dict):
-                form.instance.impact_metrics = impact_metrics
-        
-        return super().form_valid(form)
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.instance.impact_metrics:
+            self.instance.impact_metrics = {}
+        return cleaned_data
 
 class LanguageForm(forms.ModelForm):
     class Meta:
